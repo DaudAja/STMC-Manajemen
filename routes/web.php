@@ -8,6 +8,12 @@ use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Artisan;
+
+Route::get('/link-storage', function () {
+    Artisan::call('storage:link');
+    return 'Link Created';
+});
 
 // --- Rute Publik ---
 Route::get('/', function () {
@@ -84,8 +90,18 @@ Route::middleware(['auth', 'is_active'])->group(function () {
     Route::prefix('surat')->name('surat.')->group(function () {
         Route::get('/input', [SuratController::class, 'input'])->name('input');
         Route::post('/store', [SuratController::class, 'store'])->name('store');
+
+        
         Route::get('/masuk', [SuratController::class, 'masuk'])->name('masuk');
         Route::get('/keluar', [SuratController::class, 'keluar'])->name('keluar');
+
+
+        Route::get('/edit/{id}', [SuratController::class, 'edit'])->name('edit');
+        Route::put('/update/{id}', [SuratController::class, 'update'])->name('update');
+
+        Route::get('/download/{id}', [SuratController::class, 'download'])->name('download');
+        Route::delete('/{id}', [SuratController::class, 'destroy'])->name('destroy');
+
         Route::get('/{surat}', [SuratController::class, 'show'])->name('show');
     });
 

@@ -107,16 +107,99 @@ class SuratController extends Controller
         $surat->load('user');
         return view('surat.detail', compact('surat'));
     }
-    public function destroy(Surat $surat)
+
+    // 4. FUNGSI UNTUK MENAMPILKAN FORM EDIT
+    public function edit($id)
     {
-        // 1. Hapus file fisik dari storage public
-        if ($surat->foto_bukti && Storage::disk('public')->exists($surat->foto_bukti)) {
-            Storage::disk('public')->delete($surat->foto_bukti);
+        $surat = Surat::findOrFail($id);
+        $category = Category::all();
+
+        return view('surat.edit', compact('surat', 'category'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $surat = Surat::findOrFail($id);
+
+        $validated = $request->validate([
+            'nama_surat'    => 'required|string|max:255',
+            'tanggal_surat' => 'required|date',
+            'foto_bukti'    => 'nullable|file|mimes:pdf|max:5120', // Nullable: user boleh tidak ganti file
+            // Nomor surat & Kategori biasanya TIDAK boleh diganti agar urutan aman
+        ]);
+
+        // Cek jika user upload file baru
+        if ($request->hasFile('foto_bukti')) {
+            // Hapus file lama fisik jika ada
+            if ($surat->foto_bukti && Storage::disk('public')->exists('surat/' . $surat->foto_bukti)) {
+                Storage::disk('public')->delete('surat/' . $surat->foto_bukti);
+            }
+
+            // Simpan file baru
+            $path = $request->file('foto_bukti')->store('surat', 'public');
+            $surat->foto_bukti = basename($path);
         }
 
-        // 2. Hapus data dari database
+        // Update Data Lainnya
+        $surat->nama_surat    = $validated['nama_surat'];
+        $surat->tanggal_surat = $validated['tanggal_surat'];
+        $surat->save();
+
+        // Catat Log
+        ActivityLog::create([
+            'user_id'    => Auth::id(),
+            'aksi'       => 'Edit Surat',
+            'deskripsi'  => "Mengubah data surat nomor: {$surat->nomor_surat}",
+            'ip_address' => $request->ip(),
+        ]);
+
+        return redirect()->route('surat.show', $surat->id)->with('success', 'Data surat berhasil diperbaiki!');
+    }
+
+    // 5. FUNGSI UNTUK HAPUS (SOFT DELETE)
+    public function destroy($id)
+    {
+        // 1. Cari data surat
+        $surat = Surat::findOrFail($id);
+
+        // 2. Lakukan Soft Delete (Hapus Sementara)
+        // Data akan hilang dari tabel utama, tapi tetap ada di database dengan status 'deleted'.
+        // File fisik (PDF) JANGAN dihapus dulu, supaya bisa di-restore kalau salah hapus.
         $surat->delete();
-        return redirect()->route('dashboard')->with('success', 'Arsip surat berhasil dihapus selamanya.');
+
+        // 3. Catat Log
+        ActivityLog::create([
+            'user_id'    => Auth::id(),
+            'aksi'       => 'Hapus Surat (Soft Delete)',
+            'deskripsi'  => "Menghapus sementara surat nomor: {$surat->nomor_surat}",
+            'ip_address' => request()->ip(),
+        ]);
+
+        return redirect()->route('dashboard')->with('success', 'Surat berhasil dipindahkan ke sampah (Trash). Nomor urut tetap aman.');
+    }
+
+    // 6. FUNGSI UNTUK DOWNLOAD FILE SURAT
+    public function download($id)
+    {
+        $surat = Surat::findOrFail($id);
+
+        // LOGIKA PERBAIKAN: Gunakan Path File (Folder + Nama), bukan Objek Surat
+        $filePath = 'surat/' . $surat->foto_bukti;
+
+        // Catat Log
+        ActivityLog::create([
+            'user_id' => Auth::id(),
+            'aksi' => 'Download Surat',
+            'deskripsi' => "Mendownload file surat dengan nomor: {$surat->nomor_surat}",
+            'ip_address' => request()->ip(),
+        ]);
+
+        // Cek apakah file fisik ada di storage
+        if (Storage::disk('public')->exists($filePath)) {
+            return Storage::disk('public')->download($filePath, $surat->foto_bukti);
+        } else {
+            return redirect()->back()->with('error', 'File fisik tidak ditemukan di server.');
+        }
     }
 
     // FUNGSI UNTUK SURAT MASUK
@@ -167,24 +250,5 @@ class SuratController extends Controller
         $external = $baseQuery('external')->latest()->get();
 
         return view('surat.keluar', compact('internal', 'external'));
-    }
-
-
-    public function download($id)
-    {
-        $surat = Surat::findOrFail($id);
-
-        ActivityLog::create([
-            'user_id' => Auth::id(),
-            'aksi' => 'Download Surat',
-            'deskripsi' => "Mendownload file surat dengan nomor: {$surat->nomor_surat}",
-            'ip_address' => request()->ip(),
-        ]);
-
-        if (Storage::exists($surat)) {
-            return Storage::download($surat, $surat->foto_bukti);
-        } else {
-            return redirect()->back()->with('error', 'File tidak ditemukan.');
-        }
     }
 }

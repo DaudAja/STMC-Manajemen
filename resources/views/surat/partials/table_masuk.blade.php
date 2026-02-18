@@ -47,6 +47,10 @@
                         <a href="{{ route('surat.show', $item->id) }}" class="btn btn-sm btn-outline-success border-0">
                             <i class="bi bi-eye-fill"></i> Detail
                         </a>
+
+                        <a href="{{ route('surat.edit', $item->id) }}" class="btn btn-sm btn-outline-primary border-0">
+                            <i class="bi bi-pencil-fill"></i> Edit
+                        </a>
                     </td>
                 </tr>
             @empty
