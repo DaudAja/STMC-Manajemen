@@ -13,45 +13,6 @@ use App\Models\ActivityLog;
 
 class UserController extends Controller
 {
-    // Ini fungsi Dashboard yang kita pindah ke sini
-    public function dashboard()
-    {
-        // 1. Hitung Surat Masuk Hari Ini via Relasi
-        $masukHariIni = Surat::whereHas('category', function ($q) {
-            $q->where('jenis', 'masuk');
-        })->whereDate('created_at', today())->count();
-
-        // 2. Hitung Surat Keluar Hari Ini via Relasi
-        $keluarHariIni = Surat::whereHas('category', function ($q) {
-            $q->where('jenis', 'keluar');
-        })->whereDate('created_at', today())->count();
-
-        // 3. AMBIL DATA INI (Yang tadi menyebabkan error)
-        $internalCount = Surat::whereHas('category', function ($q) {
-            $q->where('sifat', 'internal');
-        })->count();
-
-        $externalCount = Surat::whereHas('category', function ($q) {
-            $q->where('sifat', 'external');
-        })->count();
-
-        // 4. Ambil Surat Terbaru dengan Eager Loading 'category'
-        $suratTerbaru = Surat::with('category')->latest()->take(10)->get();
-
-        // 5. Ambil data logs aktivitas terbaru
-        $logs = ActivityLog::with('user')->latest()->take(5)->get();
-
-        // 6. Pastikan semua variabel dimasukkan ke dalam compact()
-        return view('dashboard', compact(
-            'masukHariIni',
-            'keluarHariIni',
-            'internalCount', // <-- Variabel ini yang dicari View
-            'externalCount', // <-- Ini juga jangan lupa
-            'suratTerbaru',
-            'logs'
-        ));
-    }
-
     // Fungsi Profil
     public function profile()
     {

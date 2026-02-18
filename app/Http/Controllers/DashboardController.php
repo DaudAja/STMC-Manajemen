@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Surat;
 use App\Models\ActivityLog;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -35,14 +36,42 @@ class DashboardController extends Controller
         // 5. Ambil data logs terbaru
         $logs = ActivityLog::with('user')->latest()->take(5)->get();
 
-        // 6. Return ke view dengan semua data pendukung
-        return view('dashboard', compact(
-            'masukHariIni',
-            'keluarHariIni',
-            'internalCount',
-            'externalCount',
-            'suratTerbaru',
-            'logs'
+        // 2. DATA UNTUK CHART (BARU)
+
+        // A. Perbandingan Masuk vs Keluar (Total Tahunan)
+        $totalMasuk = Surat::whereHas('category', function($q) {
+            $q->where('jenis', 'masuk');
+        })->whereYear('created_at', date('Y'))->count();
+
+        $totalKeluar = Surat::whereHas('category', function($q) {
+            $q->where('jenis', 'keluar');
+        })->whereYear('created_at', date('Y'))->count();
+
+        // B. Statistik Surat Per Bulan (Tahun Ini)
+        $suratPerBulan = Surat::select(
+            DB::raw('MONTH(created_at) as bulan'),
+            DB::raw('COUNT(*) as total')
+        )
+        ->whereYear('created_at', date('Y'))
+        ->groupBy('bulan')
+        ->orderBy('bulan')
+        ->pluck('total', 'bulan')->toArray();
+
+        // Normalisasi data bulanan (isi 0 jika bulan kosong)
+        $dataBulanan = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $dataBulanan[] = $suratPerBulan[$i] ?? 0;
+        }
+
+        // 3. DATA TABEL & LOGS
+        $suratTerbaru = Surat::with('category')->latest()->take(5)->get();
+        $logs = ActivityLog::with('user')->latest()->take(5)->get();
+
+        return view('Dashboard', compact(
+            'masukHariIni', 'keluarHariIni',
+            'internalCount', 'externalCount',
+            'totalMasuk', 'totalKeluar', 'dataBulanan', // Variable baru untuk chart
+            'suratTerbaru', 'logs'
         ));
     }
 }

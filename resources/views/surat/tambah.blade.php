@@ -49,7 +49,7 @@
                             {{-- Nomor Surat Otomatis / Manual --}}
                             <div class="col-md-12">
                                 <label class="form-label fw-bold">Nomor Surat</label>
-                                <div class="input-group input-group-lg shadow-sm">
+                                <div class="input-group input-group-sm shadow-sm">
                                     <span class="input-group-text bg-light text-primary"><i class="bi bi-hash"></i></span>
                                     <input type="text" id="nomor_surat_display" name="nomor_surat" class="form-control bg-light fw-bold" placeholder="Pilih kategori untuk melihat nomor..." required readonly>
                                 </div>

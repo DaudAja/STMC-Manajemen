@@ -5,6 +5,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SuratController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -75,7 +76,8 @@ Route::get('/account-inactive', function () {
 Route::middleware(['auth', 'is_active'])->group(function () {
 
     // Utama
-    Route::get('/dashboard', [UserController::class, 'dashboard'])->name('dashboard');
+    // Route::get('/dashboard', [UserController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/profile', [UserController::class, 'profile'])->name('profile');
 
     // Modul Surat (Grup dengan Prefix 'surat')
