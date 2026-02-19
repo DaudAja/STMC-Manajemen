@@ -39,18 +39,43 @@
                     <td class="text-center"><small class="text-muted">{{ $item->user->nama_lengkap ?? 'Admin' }}</small>
                     </td>
                     <td class="text-center">
+                        {{-- 1. Tombol Buka PDF --}}
                         <a href="{{ asset('storage/surat/' . $item->foto_bukti) }}" target="_blank"
-                            class="btn btn-sm btn-outline-success border-0">
-                            <i class="bi bi-file-earmark-pdf-fill"></i> Buka
+                            class="btn btn-sm btn-outline-success border-0" title="Buka PDF">
+                            <i class="bi bi-file-earmark-pdf-fill"></i> Buka PDF
                         </a>
 
-                        <a href="{{ route('surat.show', $item->id) }}" class="btn btn-sm btn-outline-success border-0">
+                        {{-- 2. Tombol Detail --}}
+                        <a href="{{ route('surat.show', $item->id) }}" class="btn btn-sm btn-outline-info border-0"
+                            title="Detail">
                             <i class="bi bi-eye-fill"></i> Detail
                         </a>
 
-                        <a href="{{ route('surat.edit', $item->id) }}" class="btn btn-sm btn-outline-primary border-0">
+                        {{-- 3. Tombol Edit --}}
+                        <a href="{{ route('surat.edit', $item->id) }}" class="btn btn-sm btn-outline-primary border-0"
+                            title="Edit">
                             <i class="bi bi-pencil-fill"></i> Edit
                         </a>
+
+                        {{-- 4. Tombol Hapus dengan Logika Proteksi --}}
+                        @if ($item->category->jenis == 'masuk')
+                            {{-- WAJIB MENGGUNAKAN FORM UNTUK DELETE --}}
+                            <form action="{{ route('surat.destroy', $item->id) }}" method="POST" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-outline-danger border-0"
+                                    onclick="return confirm('Apakah Anda yakin ingin menghapus surat masuk ini?')">
+                                    <i class="bi bi-trash"></i> Hapus
+                                </button>
+                            </form>
+                        @else
+                            {{-- Jika Surat Keluar: Tombol dinonaktifkan/abu-abu --}}
+                            <button type="button" class="btn btn-sm btn-outline-secondary border-0 opacity-50"
+                                onclick="alert('Surat Keluar tidak boleh dihapus demi integritas nomor urut arsip.')"
+                                title="Hapus Terkunci">
+                                <i class="bi bi-trash"></i> Hapus
+                            </button>
+                        @endif
                     </td>
                 </tr>
             @empty

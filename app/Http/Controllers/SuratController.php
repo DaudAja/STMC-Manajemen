@@ -97,7 +97,7 @@ class SuratController extends Controller
             'foto_bukti'    => $nama_file,
         ]);
 
-        return redirect()->route('dashboard')->with('success', 'Surat berhasil diarsipkan!');
+        return redirect()->back()->with('success', 'Surat berhasil diarsipkan!');
     }
 
     // 3. FUNGSI UNTUK MENAMPILKAN DETAIL SURAT
@@ -114,7 +114,7 @@ class SuratController extends Controller
         $surat = Surat::findOrFail($id);
 
         if (Auth::user()->role !== 'admin' && Auth::id() !== $surat->user_id) {
-            return redirect()->route('dashboard')->with('error', 'Anda tidak memiliki izin untuk mengedit surat ini.');
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengedit surat ini.');
         }
 
         $category = Category::all();
@@ -127,7 +127,7 @@ class SuratController extends Controller
         $surat = Surat::findOrFail($id);
 
         if (Auth::user()->role !== 'admin' && Auth::id() !== $surat->user_id) {
-            return redirect()->route('dashboard')->with('error', 'Anda tidak memiliki izin untuk mengedit surat ini.');
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengedit surat ini.');
         }
 
         $validated = $request->validate([
@@ -171,12 +171,20 @@ class SuratController extends Controller
         // 1. Cari data surat
         $surat = Surat::findOrFail($id);
 
-        // 2. Lakukan Soft Delete (Hapus Sementara)
-        // Data akan hilang dari tabel utama, tapi tetap ada di database dengan status 'deleted'.
-        // File fisik (PDF) JANGAN dihapus dulu, supaya bisa di-restore kalau salah hapus.
+        // 2. Proteksi: Surat Keluar tidak boleh dihapus
+        if ($surat->category->jenis == 'keluar') {
+            return redirect()->back()->with('error', 'Surat Keluar tidak boleh dihapus agar nomor urut tidak hilang. Gunakan fitur Edit jika ada kesalahan.');
+        }
+
+        // 3. Proteksi: Cek Izin (Admin atau Pemilik)
+        if (Auth::user()->role !== 'admin' && Auth::id() !== $surat->user_id) {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk menghapus surat ini.');
+        }
+
+        // 4. Proses Soft Delete
         $surat->delete();
 
-        // 3. Catat Log
+        // 5. Catat Log
         ActivityLog::create([
             'user_id'    => Auth::id(),
             'aksi'       => 'Hapus Surat (Soft Delete)',
@@ -184,7 +192,34 @@ class SuratController extends Controller
             'ip_address' => request()->ip(),
         ]);
 
-        return redirect()->route('dashboard')->with('success', 'Surat berhasil dipindahkan ke sampah (Trash). Nomor urut tetap aman.');
+        // Kembali ke halaman sebelumnya (lebih nyaman untuk user)
+        return redirect()->back()->with('success', 'Surat berhasil dipindahkan ke tempat sampah.');
+    }
+
+    // 1. Menampilkan Data yang Sudah di Hapus (Trash)
+    public function trash()
+    {
+        // onlyTrashed() mengambil data yang sudah di soft-delete
+        $data = Surat::onlyTrashed()->with('category', 'user')->get();
+        return view('surat.trash', compact('data'));
+    }
+
+    // 2. Mengembalikan data (Restore)
+    public function restore($id)
+    {
+        // findWithTrashed mencari data meskipun sudah di-delete
+        $surat = Surat::withTrashed()->findOrFail($id);
+        $surat->restore();
+
+        // Catat Log Aktivitas
+        ActivityLog::create([
+            'user_id'    => Auth::id(),
+            'aksi'       => 'Restore Surat',
+            'deskripsi'  => "Mengembalikan surat nomor: {$surat->nomor_surat} dari tempat sampah",
+            'ip_address' => request()->ip(),
+        ]);
+
+        return redirect()->back()->with('success', 'Surat berhasil dikembalikan.');
     }
 
     // 6. FUNGSI UNTUK CETAK LAPORAN (Berdasarkan Tanggal & Jenis)
@@ -215,7 +250,7 @@ class SuratController extends Controller
         // B. Filter Jenis (INI YANG DIPERBAIKI)
         // Kita cari 'jenis' di dalam tabel 'category', bukan di tabel 'surat'
         if ($jenis !== 'semua') {
-            $query->whereHas('category', function($q) use ($jenis) {
+            $query->whereHas('category', function ($q) use ($jenis) {
                 $q->where('jenis', $jenis);
             });
         }

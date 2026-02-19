@@ -93,7 +93,7 @@
                             </div>
 
                             <div class="d-flex justify-content-between pt-3 border-top">
-                                <a href="{{ route('surat.show', $surat->id) }}" class="btn btn-light border px-4">Batal</a>
+                                <a href="{{ route('surat.masuk', $surat->id) }}" class="btn btn-light border px-4">Batal</a>
                                 <button type="submit" class="btn btn-primary px-5 rounded-pill fw-bold">
                                     <i class="bi bi-save me-2"></i>Simpan Perubahan
                                 </button>

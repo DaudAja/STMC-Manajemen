@@ -8,12 +8,12 @@ use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Artisan;
+// use Illuminate\Support\Facades\Artisan;
 
-Route::get('/link-storage', function () {
-    Artisan::call('storage:link');
-    return 'Link Created';
-});
+// Route::get('/link-storage', function () {
+//     Artisan::call('storage:link');
+//     return 'Link Created';
+// });
 
 Route::get('/link-storage', function () {
     $target = storage_path('app/public');
@@ -118,8 +118,13 @@ Route::middleware(['auth', 'is_active'])->group(function () {
         Route::post('/cetak', [SuratController::class, 'laporanCetak'])->name('cetak');
     });
 
-    // Grup Admin (Verifikasi User)
+    // Grup Admin
     Route::middleware('can:admin')->prefix('admin')->name('admin.')->group(function () {
+
+        // Manajemen Surat (Trash & Restore)
+        Route::get('/surat/trash', [SuratController::class, 'trash'])->name('surat.trash');
+        Route::post('/surat/restore/{id}', [SuratController::class, 'restore'])->name('surat.restore');
+
         // Manajemen User (Aktif/Nonaktif)
         Route::get('/management', [UserController::class, 'userList'])->name('users.list');
         Route::patch('/users/{user}/deactivate', [UserController::class, 'deactivate'])->name('users.deactivate');
