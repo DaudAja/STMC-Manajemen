@@ -196,7 +196,7 @@ class SuratController extends Controller
         return redirect()->back()->with('success', 'Surat berhasil dipindahkan ke tempat sampah.');
     }
 
-    // 1. Menampilkan Data yang Sudah di Hapus (Trash)
+    // 5. Menampilkan Data yang Sudah di Hapus (Trash)
     public function trash()
     {
         // onlyTrashed() mengambil data yang sudah di soft-delete
@@ -261,7 +261,37 @@ class SuratController extends Controller
         return view('laporan.cetak', compact('data', 'awal', 'akhir', 'jenis'));
     }
 
-    // 7. FUNGSI UNTUK DOWNLOAD FILE SURAT
+    // 7. FUNGSI UNTUK HAPUS PERMANEN (Force Delete)
+    public function forceDelete($id)
+    {
+        // Cari data yang sudah di-trash
+        $surat = Surat::withTrashed()->findOrFail($id);
+        $nomorSurat = $surat->nomor_surat;
+
+        // 1. Hapus File Fisik PDF dari Storage agar hemat ruang hosting
+        if ($surat->foto_bukti) {
+            $filePath = public_path('storage/surat/' . $surat->foto_bukti);
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
+        }
+
+        // 2. Hapus Permanen dari Database
+        $surat->forceDelete();
+
+        // 3. Catat Log Aktivitas
+        \App\Models\ActivityLog::create([
+            'user_id'    => auth()->id(),
+            'aksi'       => 'Hapus Permanen',
+            'deskripsi'  => "Menghapus selamanya surat nomor: {$nomorSurat} dan file fisiknya.",
+            'ip_address' => request()->ip(),
+        ]);
+
+        return redirect()->back()->with('success', 'Surat berhasil dihapus secara permanen dari server.');
+    }
+
+
+    // 8. FUNGSI UNTUK DOWNLOAD FILE SURAT
     public function download($id)
     {
         $surat = Surat::findOrFail($id);

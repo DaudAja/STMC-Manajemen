@@ -125,6 +125,9 @@ Route::middleware(['auth', 'is_active'])->group(function () {
         Route::get('/surat/trash', [SuratController::class, 'trash'])->name('surat.trash');
         Route::post('/surat/restore/{id}', [SuratController::class, 'restore'])->name('surat.restore');
 
+        // Aksi Force Delete (Hapus Selamanya)
+        Route::delete('/surat/force-delete/{id}', [SuratController::class, 'forceDelete'])->name('surat.force_delete');
+
         // Manajemen User (Aktif/Nonaktif)
         Route::get('/management', [UserController::class, 'userList'])->name('users.list');
         Route::patch('/users/{user}/deactivate', [UserController::class, 'deactivate'])->name('users.deactivate');
