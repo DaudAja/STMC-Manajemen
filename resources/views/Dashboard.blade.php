@@ -180,8 +180,11 @@
                                 <p class="text-center text-muted small py-4">Belum ada aktivitas tercatat.</p>
                             @endforelse
                         </div>
-                        
-                        <a href="{{ route('admin.admin.logs') }}" class="btn btn-light btn-sm w-100 mt-2 border text-muted">Lihat Semua Log</a>
+                         @if(Auth::user()->role === 'admin')
+                            <div class="mt-2">
+                                <a href="{{ route('admin.admin.logs') }}" class="btn btn-light btn-sm w-100 border text-muted">Lihat Semua Log</a>
+                            </div>
+                         @endif
                     </div>
                 </div>
             </div>

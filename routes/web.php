@@ -15,6 +15,13 @@ Route::get('/link-storage', function () {
     return 'Link Created';
 });
 
+Route::get('/link-storage', function () {
+    $target = storage_path('app/public');
+    $link = public_path('storage');
+    symlink($target, $link);
+    return 'Symlink Storage Berhasil Dibuat!';
+});
+
 // --- Rute Publik ---
 Route::get('/', function () {
     return view('Awal');
@@ -91,7 +98,7 @@ Route::middleware(['auth', 'is_active'])->group(function () {
         Route::get('/input', [SuratController::class, 'input'])->name('input');
         Route::post('/store', [SuratController::class, 'store'])->name('store');
 
-        
+
         Route::get('/masuk', [SuratController::class, 'masuk'])->name('masuk');
         Route::get('/keluar', [SuratController::class, 'keluar'])->name('keluar');
 
@@ -103,6 +110,12 @@ Route::middleware(['auth', 'is_active'])->group(function () {
         Route::delete('/{id}', [SuratController::class, 'destroy'])->name('destroy');
 
         Route::get('/{surat}', [SuratController::class, 'show'])->name('show');
+    });
+
+    // --- MODUL LAPORAN / REKAP ---
+    Route::prefix('laporan')->name('laporan.')->group(function () {
+        Route::get('/', [SuratController::class, 'laporanForm'])->name('index');
+        Route::post('/cetak', [SuratController::class, 'laporanCetak'])->name('cetak');
     });
 
     // Grup Admin (Verifikasi User)

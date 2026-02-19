@@ -112,6 +112,11 @@ class SuratController extends Controller
     public function edit($id)
     {
         $surat = Surat::findOrFail($id);
+
+        if (Auth::user()->role !== 'admin' && Auth::id() !== $surat->user_id) {
+            return redirect()->route('dashboard')->with('error', 'Anda tidak memiliki izin untuk mengedit surat ini.');
+        }
+
         $category = Category::all();
 
         return view('surat.edit', compact('surat', 'category'));
@@ -120,6 +125,10 @@ class SuratController extends Controller
     public function update(Request $request, $id)
     {
         $surat = Surat::findOrFail($id);
+
+        if (Auth::user()->role !== 'admin' && Auth::id() !== $surat->user_id) {
+            return redirect()->route('dashboard')->with('error', 'Anda tidak memiliki izin untuk mengedit surat ini.');
+        }
 
         $validated = $request->validate([
             'nama_surat'    => 'required|string|max:255',
@@ -178,7 +187,46 @@ class SuratController extends Controller
         return redirect()->route('dashboard')->with('success', 'Surat berhasil dipindahkan ke sampah (Trash). Nomor urut tetap aman.');
     }
 
-    // 6. FUNGSI UNTUK DOWNLOAD FILE SURAT
+    // 6. FUNGSI UNTUK CETAK LAPORAN (Berdasarkan Tanggal & Jenis)
+    public function laporanForm()
+    {
+        return view('laporan.index');
+    }
+
+    public function laporanCetak(Request $request)
+    {
+        // 1. Validasi
+        $request->validate([
+            'tgl_awal'    => 'required|date',
+            'tgl_akhir'   => 'required|date|after_or_equal:tgl_awal',
+            'jenis_surat' => 'required|in:semua,masuk,keluar',
+        ]);
+
+        $awal  = $request->tgl_awal;
+        $akhir = $request->tgl_akhir;
+        $jenis = $request->jenis_surat;
+
+        // 2. Query Data dengan Relasi
+        $query = Surat::with(['category', 'user']);
+
+        // A. Filter Tanggal
+        $query->whereBetween('tanggal_surat', [$awal, $akhir]);
+
+        // B. Filter Jenis (INI YANG DIPERBAIKI)
+        // Kita cari 'jenis' di dalam tabel 'category', bukan di tabel 'surat'
+        if ($jenis !== 'semua') {
+            $query->whereHas('category', function($q) use ($jenis) {
+                $q->where('jenis', $jenis);
+            });
+        }
+
+        // 3. Ambil Data
+        $data = $query->orderBy('tanggal_surat', 'asc')->get();
+
+        return view('laporan.cetak', compact('data', 'awal', 'akhir', 'jenis'));
+    }
+
+    // 7. FUNGSI UNTUK DOWNLOAD FILE SURAT
     public function download($id)
     {
         $surat = Surat::findOrFail($id);

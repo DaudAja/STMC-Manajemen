@@ -184,6 +184,9 @@
             <a href="/surat/keluar" class="nav-link {{ Request::is('surat/keluar*') ? 'active' : '' }}">
                 <i class="bi bi-arrow-up-right-circle-fill"></i> Surat Keluar
             </a>
+            <a href="/laporan" class="nav-link {{ Request::is('laporan*') ? 'active' : '' }}">
+                <i class="bi bi-archive-fill"></i> Laporan / Rekap
+            </a>
 
             @if (auth()->check() && auth()->user()->role == 'admin')
                 <div class="sidebar-divider">Administrator</div>
