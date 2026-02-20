@@ -280,8 +280,8 @@ class SuratController extends Controller
         $surat->forceDelete();
 
         // 3. Catat Log Aktivitas
-        \App\Models\ActivityLog::create([
-            'user_id'    => auth()->id(),
+        ActivityLog::create([
+            'user_id'    => Auth::id(),
             'aksi'       => 'Hapus Permanen',
             'deskripsi'  => "Menghapus selamanya surat nomor: {$nomorSurat} dan file fisiknya.",
             'ip_address' => request()->ip(),

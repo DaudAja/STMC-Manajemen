@@ -210,7 +210,6 @@
         document.addEventListener("DOMContentLoaded", function() {
 
             // A. Chart Bulanan (Bar)
-            // Mengecek apakah elemen canvas ada
             const ctxBar = document.getElementById('chartBulanan');
             if(ctxBar) {
                 new Chart(ctxBar, {
@@ -219,9 +218,8 @@
                         labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
                         datasets: [{
                             label: 'Jumlah Surat',
-                            // Mengambil data dari Controller (Pastikan Controller sudah diupdate)
                             data: {!! json_encode(array_values($dataBulanan ?? array_fill(0, 12, 0))) !!},
-                            backgroundColor: 'rgba(13, 110, 253, 0.7)', // Warna Biru Bootstrap
+                            backgroundColor: 'rgba(13, 110, 253, 0.7)',
                             borderColor: 'rgba(13, 110, 253, 1)',
                             borderWidth: 1,
                             borderRadius: 4
@@ -231,7 +229,15 @@
                         responsive: true,
                         maintainAspectRatio: false,
                         scales: {
-                            y: { beginAtZero: true, grid: { borderDash: [2, 4] } },
+                            y: {
+                                beginAtZero: true,
+                                grid: { borderDash: [2, 4] },
+                                // MENGUBAH ANGKA DESIMAL MENJADI ANGKA BULAT
+                                ticks: {
+                                    precision: 0,
+                                    stepSize: 1
+                                }
+                            },
                             x: { grid: { display: false } }
                         },
                         plugins: { legend: { display: false } }
@@ -256,7 +262,7 @@
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
-                        cutout: '70%', // Membuat lubang donat lebih besar
+                        cutout: '70%',
                         plugins: {
                             legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20 } }
                         }
