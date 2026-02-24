@@ -29,12 +29,12 @@
 
         .register-card {
             background: #ffffff;
-            border-radius: 20px; /* Sudut sedikit lebih tegas tapi tetap modern */
+            border-radius: 20px;
             border: none;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             width: 100%;
-            max-width: 440px; /* UKURAN LEBIH KECIL/COMPACT */
-            padding: 30px; /* Padding dikurangi agar pas dengan ukuran kecil */
+            max-width: 440px;
+            padding: 30px;
             position: relative;
         }
 
@@ -60,7 +60,7 @@
 
         .form-control {
             border-radius: 10px;
-            padding: 9px 12px; /* Ukuran input lebih ramping */
+            padding: 9px 12px;
             border: 1px solid #e5e7eb;
             background-color: #f9fafb;
             font-size: 0.9rem;
@@ -73,16 +73,49 @@
         }
 
         .input-group-text {
-            border-radius: 10px 0 0 10px !important;
             background-color: #f9fafb;
             border: 1px solid #e5e7eb;
-            border-right: none;
             color: #9ca3af;
             padding: 0 12px;
         }
 
+        /* Penyesuaian CSS untuk Ikon dan Form */
+        .input-group-text:first-child {
+            border-radius: 10px 0 0 10px !important;
+            border-right: none;
+        }
+
         .form-control-with-icon {
             border-radius: 0 10px 10px 0 !important;
+        }
+
+        /* Style untuk checkbox show password */
+        .show-password-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+        }
+
+        .show-password-label {
+            font-size: 0.75rem;
+            color: #6b7280;
+            cursor: pointer;
+            user-select: none;
+            margin: 0;
+        }
+
+        .form-check-input {
+            width: 1em;
+            height: 1em;
+            margin-top: 0;
+            cursor: pointer;
+        }
+
+        .form-check-input:checked {
+            background-color: var(--stmc-primary);
+            border-color: var(--stmc-primary);
         }
 
         .btn-register {
@@ -110,11 +143,19 @@
             text-decoration: none;
         }
 
+        .login-link:hover {
+            text-decoration: underline;
+        }
+
         .back-link {
             text-decoration: none;
             font-size: 0.8rem;
             color: #9ca3af;
             transition: 0.3s;
+        }
+
+        .back-link:hover {
+            color: var(--stmc-primary);
         }
 
         .alert-custom {
@@ -173,15 +214,20 @@
                 </div>
             </div>
 
-            <div class="row g-2 mb-3">
+            <div class="row g-2 mt-1">
                 <div class="col-6">
                     <label class="form-label">Sandi</label>
-                    <input type="password" name="password" class="form-control" placeholder="••••" required>
+                    <input type="password" id="password" name="password" class="form-control" placeholder="••••" required>
                 </div>
                 <div class="col-6">
                     <label class="form-label">Ulangi</label>
-                    <input type="password" name="password_confirmation" class="form-control" placeholder="••••" required>
+                    <input type="password" id="password_confirm" name="password_confirmation" class="form-control" placeholder="••••" required>
                 </div>
+            </div>
+
+            <div class="show-password-container">
+                <input class="form-check-input" type="checkbox" id="showPasswords">
+                <label class="show-password-label" for="showPasswords">Tampilkan Sandi</label>
             </div>
 
             <button type="submit" class="btn btn-register w-100 mb-3">
@@ -198,5 +244,19 @@
         </form>
     </div>
 
+    <script>
+        document.getElementById('showPasswords').addEventListener('change', function() {
+            const passInput = document.getElementById('password');
+            const confirmInput = document.getElementById('password_confirm');
+
+            if(this.checked) {
+                passInput.type = 'text';
+                confirmInput.type = 'text';
+            } else {
+                passInput.type = 'password';
+                confirmInput.type = 'password';
+            }
+        });
+    </script>
 </body>
 </html>

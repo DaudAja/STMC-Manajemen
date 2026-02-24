@@ -108,7 +108,7 @@
                             <label class="form-label small fw-bold text-secondary">PASSWORD SAAT INI</label>
                             <div class="input-group shadow-sm">
                                 <span class="input-group-text bg-white border-light-subtle"><i class="bi bi-key text-muted"></i></span>
-                                <input type="password" name="current_password" class="form-control border-light-subtle" placeholder="Masukkan password sekarang" required>
+                                <input type="password" id="current_password" name="current_password" class="form-control border-light-subtle" placeholder="Masukkan password sekarang" required>
                             </div>
                         </div>
 
@@ -116,16 +116,23 @@
                             <label class="form-label small fw-bold text-secondary">PASSWORD BARU</label>
                             <div class="input-group shadow-sm">
                                 <span class="input-group-text bg-white border-light-subtle"><i class="bi bi-lock text-muted"></i></span>
-                                <input type="password" name="password" class="form-control border-light-subtle" placeholder="Minimal 8 karakter" required>
+                                <input type="password" id="new_password" name="password" class="form-control border-light-subtle" placeholder="Minimal 8 karakter" required>
                             </div>
                         </div>
 
-                        <div class="mb-4">
+                        <div class="mb-3">
                             <label class="form-label small fw-bold text-secondary">KONFIRMASI PASSWORD BARU</label>
                             <div class="input-group shadow-sm">
                                 <span class="input-group-text bg-white border-light-subtle"><i class="bi bi-shield-check text-muted"></i></span>
-                                <input type="password" name="password_confirmation" class="form-control border-light-subtle" placeholder="Ulangi password baru" required>
+                                <input type="password" id="confirm_password" name="password_confirmation" class="form-control border-light-subtle" placeholder="Ulangi password baru" required>
                             </div>
+                        </div>
+
+                        <div class="form-check mb-4 d-flex align-items-center">
+                            <input class="form-check-input me-2" type="checkbox" id="showAllPasswords" style="cursor: pointer;">
+                            <label class="form-check-label small text-muted mt-1" for="showAllPasswords" style="cursor: pointer; user-select: none;">
+                                Tampilkan semua sandi
+                            </label>
                         </div>
 
                         <button type="submit" class="btn btn-danger w-100 py-2 rounded-pill fw-bold shadow-sm" style="transition: 0.3s;">
@@ -137,4 +144,22 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.getElementById('showAllPasswords').addEventListener('change', function() {
+        const currentPass = document.getElementById('current_password');
+        const newPass = document.getElementById('new_password');
+        const confirmPass = document.getElementById('confirm_password');
+
+        if(this.checked) {
+            currentPass.type = 'text';
+            newPass.type = 'text';
+            confirmPass.type = 'text';
+        } else {
+            currentPass.type = 'password';
+            newPass.type = 'password';
+            confirmPass.type = 'password';
+        }
+    });
+</script>
 @endsection

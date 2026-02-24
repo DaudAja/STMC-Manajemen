@@ -18,7 +18,6 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            /* Background gradasi navy yang elegan */
             background: linear-gradient(135deg, var(--stmc-dark) 0%, #1e293b 100%);
             height: 100vh;
             display: flex;
@@ -28,7 +27,6 @@
             overflow: hidden;
         }
 
-        /* Efek cahaya halus di sudut layar */
         body::before {
             content: "";
             position: absolute;
@@ -80,14 +78,29 @@
         }
 
         .input-group-text {
-            border-radius: 12px 0 0 12px !important;
             background-color: #f9fafb;
             border: 1px solid #e5e7eb;
-            border-right: none;
             color: #9ca3af;
         }
 
-        .form-control {
+        /* CSS Baru untuk Input Group agar lebih rapi */
+        .input-group-text:first-child {
+            border-radius: 12px 0 0 12px !important;
+            border-right: none;
+        }
+
+        .input-group-text.toggle-password {
+            border-radius: 0 12px 12px 0 !important;
+            border-left: none;
+            cursor: pointer; /* Mengubah kursor jadi tangan */
+        }
+
+        .form-control.password-input {
+            border-radius: 0 !important;
+            border-right: none;
+        }
+
+        .form-control:not(.password-input) {
             border-radius: 0 12px 12px 0 !important;
         }
 
@@ -182,7 +195,10 @@
                 <label class="form-label fw-semibold">Kata Sandi</label>
                 <div class="input-group">
                     <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                    <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+                    <input type="password" id="password" name="password" class="form-control password-input" placeholder="••••••••" required>
+                    <span class="input-group-text toggle-password" id="togglePasswordIcon">
+                        <i class="bi bi-eye-slash" id="eyeIcon"></i>
+                    </span>
                 </div>
             </div>
 
@@ -206,5 +222,24 @@
         </form>
     </div>
 
+    <script>
+        document.getElementById('togglePasswordIcon').addEventListener('click', function () {
+            const passwordInput = document.getElementById('password');
+            const eyeIcon = document.getElementById('eyeIcon');
+
+            // Cek tipe input saat ini, jika password ubah ke text, jika text ubah ke password
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                // Ubah ikon mata menjadi mata terbuka
+                eyeIcon.classList.remove('bi-eye-slash');
+                eyeIcon.classList.add('bi-eye');
+            } else {
+                passwordInput.type = 'password';
+                // Ubah ikon mata kembali menjadi mata dicoret
+                eyeIcon.classList.remove('bi-eye');
+                eyeIcon.classList.add('bi-eye-slash');
+            }
+        });
+    </script>
 </body>
 </html>
