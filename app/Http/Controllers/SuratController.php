@@ -133,8 +133,7 @@ class SuratController extends Controller
         $validated = $request->validate([
             'nama_surat'    => 'required|string|max:255',
             'tanggal_surat' => 'required|date',
-            'foto_bukti'    => 'nullable|file|mimes:pdf|max:5120', // Nullable: user boleh tidak ganti file
-            // Nomor surat & Kategori biasanya TIDAK boleh diganti agar urutan aman
+            'foto_bukti'    => 'nullable|file|mimes:pdf|max:5120',
         ]);
 
         // Cek jika user upload file baru
@@ -152,13 +151,18 @@ class SuratController extends Controller
         // Update Data Lainnya
         $surat->nama_surat    = $validated['nama_surat'];
         $surat->tanggal_surat = $validated['tanggal_surat'];
+
+        if ($surat->category->jenis == 'masuk' && $request->filled('nomor_surat')) {
+            $surat->nomor_surat = $request->nomor_surat;
+        }
+
         $surat->save();
 
         // Catat Log
         ActivityLog::create([
             'user_id'    => Auth::id(),
             'aksi'       => 'Edit Surat',
-            'deskripsi'  => "Mengubah data surat nomor: {$surat->nomor_surat}",
+            'deskripsi'  => "Mengedit data surat nomor: {$surat->nomor_surat}",
             'ip_address' => $request->ip(),
         ]);
 

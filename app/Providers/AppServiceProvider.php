@@ -25,7 +25,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Paginator::useBootstrapFive();
 
-        Surat::observe(\App\Observers\SuratObserver::class);
+        // Surat::observe(\App\Observers\SuratObserver::class);
 
         Gate::define('admin', function (User $user) {
             return $user->role === 'admin';
