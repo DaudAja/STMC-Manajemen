@@ -77,9 +77,8 @@ class DashboardController extends Controller
         'masukHariIni', 'keluarHariIni',
         'internalCount', 'externalCount',
         'totalMasuk', 'totalKeluar',
-        'totalSemuaSurat',
-        'masukBulanan', 'keluarBulanan', // Variabel baru untuk Stacked Chart
-        'suratTerbaru', 'logs'
+        'masukBulanan', 'keluarBulanan', 
+        'suratTerbaru', 'logs', 'totalSemuaSurat',
     ));
 }
 }

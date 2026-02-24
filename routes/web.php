@@ -44,9 +44,6 @@ Route::middleware(['auth', 'is_active'])->group(function () {
     // Menggunakan resource agar otomatis punya index, store, edit, update, destroy
     Route::resource('categories', CategoryController::class);
 
-    // --- Rute Log Aktivitas (Halaman Khusus) ---
-    // Route::get('/aktivitas', [UserController::class, 'indexAktivitas'])->name('aktivitas.index');
-
     // --- Rute Surat (Tambahan untuk AJAX Nomor Otomatis) ---
     // Rute ini penting agar saat pilih kategori, nomor langsung muncul tanpa refresh
     Route::get('/get-categories/{sifat}/{jenis}', [SuratController::class, 'getCategories']);
@@ -153,7 +150,6 @@ Route::middleware(['auth', 'is_active'])->group(function () {
         Route::delete('/users/{id}/force-delete', [UserController::class, 'forceDelete'])->name('users.force_delete');
 
         // Route Log Aktivitas (Opsional jika sudah ada controllernya)
-        // Ganti closure sebelumnya dengan ini
-        Route::get('/admin/logs', [ActivityLogController::class, 'index'])->name('admin.logs');
+        Route::get('/logs', [ActivityLogController::class, 'index'])->name('logs');
     });
 });

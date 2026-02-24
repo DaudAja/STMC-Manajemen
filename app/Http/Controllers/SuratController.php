@@ -353,7 +353,7 @@ class SuratController extends Controller
     }
 
     // FUNGSI UNTUK SURAT KELUAR
-    public function Keluar(request $request)
+    public function Keluar(Request $request)
     {
         $search = $request->get('search');
 
