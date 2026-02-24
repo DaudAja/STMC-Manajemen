@@ -97,6 +97,14 @@ class SuratController extends Controller
             'foto_bukti'    => $nama_file,
         ]);
 
+        // Catat Log Aktivitas
+        ActivityLog::create([
+            'user_id'    => Auth::id(),
+            'aksi'       => 'Tambah Surat',
+            'deskripsi'  => "Menambahkan surat baru dengan nomor: {$surat->nomor_surat}",
+            'ip_address' => $request->ip(),
+        ]);
+
         return redirect()->back()->with('success', 'Surat berhasil diarsipkan!');
     }
 

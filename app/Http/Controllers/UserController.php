@@ -30,7 +30,7 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email,' . $user->id,
         ]);
 
-        
+
         $user->update($request->only('nama_lengkap', 'email'));
         return redirect()->back()->with('success_profile', 'Profil berhasil diperbarui!');
     }
@@ -98,16 +98,16 @@ class UserController extends Controller
         return redirect()->back()->with('error', 'Pendaftaran user telah ditolak/dihapus.');
     }
 
-    public function indexVerifikasi()
-    {
-        // Cek apakah yang login adalah admin
-        if (Auth::user()->status !== 'admin') {
-            return redirect('/dashboard')->with('error', 'Anda tidak memiliki akses ke halaman tersebut.');
-        }
+    // public function indexVerifikasi()
+    // {
+    //     // Cek apakah yang login adalah admin
+    //     if (Auth::user()->status !== 'admin') {
+    //         return redirect('/dashboard')->with('error', 'Anda tidak memiliki akses ke halaman tersebut.');
+    //     }
 
-        $users = User::where('status', 'pending')->get();
-        return view('admin.verifikasi', compact('users'));
-    }
+    //     $users = User::where('status', 'pending')->get();
+    //     return view('admin.verifikasi', compact('users'));
+    // }
 
     // Menampilkan daftar user yang telah di-softdelete
     public function trash()

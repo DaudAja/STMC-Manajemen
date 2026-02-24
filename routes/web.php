@@ -45,7 +45,7 @@ Route::middleware(['auth', 'is_active'])->group(function () {
     Route::resource('categories', CategoryController::class);
 
     // --- Rute Log Aktivitas (Halaman Khusus) ---
-    Route::get('/aktivitas', [UserController::class, 'indexAktivitas'])->name('aktivitas.index');
+    // Route::get('/aktivitas', [UserController::class, 'indexAktivitas'])->name('aktivitas.index');
 
     // --- Rute Surat (Tambahan untuk AJAX Nomor Otomatis) ---
     // Rute ini penting agar saat pilih kategori, nomor langsung muncul tanpa refresh
