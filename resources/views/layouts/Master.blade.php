@@ -17,6 +17,39 @@
     @stack('styles')
 
     <style>
+        /* 1. MENGECILKAN SELURUH TAMPILAN (GLOBAL) */
+        html {
+            /* Bawaan standar browser adalah 16px.
+           Ubah ke 14px atau 15px agar semua elemen mengecil proporsional.
+           Ukuran 14px adalah ukuran "Sweet Spot" untuk Admin Dashboard. */
+            font-size: 14px !important;
+        }
+
+        /* 2. PENYESUAIAN TAMBAHAN (Opsional agar lebih rapi) */
+        body {
+            background-color: #f8fafc;
+            /* Latar belakang abu-abu sangat muda agar mata tidak lelah */
+        }
+
+        /* Membuat jarak dalam tabel (padding) sedikit lebih rapat */
+        .table td,
+        .table th {
+            padding: 0.6rem 0.75rem !important;
+        }
+
+        /* Mengecilkan sedikit sudut lengkung pada kartu agar terlihat lebih tajam & modern */
+        .card {
+            border-radius: 12px !important;
+            /* Asalnya mungkin 16px atau 20px, kita buat lebih rapi */
+        }
+
+        /* Menyesuaikan input form agar tidak terlalu gemuk */
+        .form-control,
+        .form-select,
+        .input-group-text {
+            padding: 0.5rem 0.75rem;
+        }
+
         :root {
             --stmc-primary: #10b981;
             --stmc-primary-dark: #059669;

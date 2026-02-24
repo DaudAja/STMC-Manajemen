@@ -50,7 +50,7 @@
                             <label class="form-label small fw-bold text-secondary">NAMA LENGKAP</label>
                             <div class="input-group shadow-sm">
                                 <span class="input-group-text bg-white border-light-subtle"><i class="bi bi-person text-muted"></i></span>
-                                <input type="text" name="name" class="form-control border-light-subtle" value="{{ $user->nama_lengkap }}" required>
+                                <input type="text" name="nama_lengkap" class="form-control border-light-subtle" value="{{ $user->nama_lengkap }}" required>
                             </div>
                         </div>
 

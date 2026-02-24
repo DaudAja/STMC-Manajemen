@@ -67,16 +67,36 @@ class AuthController extends Controller
             'password' => 'required|string|min:8|confirmed',
         ]);
 
-        User::create([
+        // Buat user baru dengan status 'pending'
+        $user = User::create([
             'nama_lengkap' => $request->nama_lengkap,
             'email' => $request->email,
             'no_telepon' => $request->no_telepon,
             'password' => Hash::make($request->password),
-            'role' => 'user',      
+            'role' => 'user',
             'status' => 'pending',
         ]);
 
-        return redirect()->route('login')->with('success', 'Registrasi berhasil! Silakan tunggu verifikasi admin.');
+        // Otomatis login setelah registrasi
+        Auth::login($user);
+
+        // Catat aktivitas registrasi dan auto-login
+        ActivityLog::create([
+            'user_id' => $user->id,
+            'aksi' => 'Register & Auto-Login',
+            'deskripsi' => 'User baru mendaftar dan otomatis masuk ke sistem.',
+            'ip_address' => $request->ip(),
+        ]);
+
+        // Cek status user setelah registrasi
+        if ($user->status === 'active') {
+            return redirect()->route('dashboard');
+        } elseif ($user->status === 'pending') {
+            return redirect()->route('waiting.verification');
+        } else {
+            return redirect()->route('account.inactive');
+        }
+
     }
 
     // Proses Logout

@@ -23,9 +23,34 @@
             </div>
         </div>
 
-        {{-- 2. Row Kartu Statistik Utama --}}
+        {{-- 2. Row Kartu Statistik Utama (5 Kolom) --}}
+        <style>
+            /* Custom CSS untuk membuat 5 kolom rata di Desktop */
+            @media (min-width: 992px) {
+                .col-lg-1-5 {
+                    flex: 0 0 auto;
+                    width: 20%;
+                }
+            }
+        </style>
+
         <div class="row mb-4 g-3">
-            <div class="col-md-3">
+            {{-- KARTU BARU: Total Keseluruhan --}}
+            <div class="col-md-4 col-lg-1-5">
+                <div class="card p-3 border-0 shadow-sm h-100" style="border-radius: 16px; background: linear-gradient(135deg, var(--stmc-primary) 0%, var(--stmc-primary-dark) 100%); color: white;">
+                    <div class="d-flex align-items-center">
+                        <div class="p-3 bg-white bg-opacity-25 rounded-circle me-3 d-flex justify-content-center align-items-center shadow-sm" style="width: 55px; height: 55px;">
+                            <i class="bi bi-archive-fill text-white fs-3"></i>
+                        </div>
+                        <div>
+                            <div class="small fw-bold text-uppercase" style="letter-spacing: 0.5px; opacity: 0.9;">Total Arsip</div>
+                            <h3 class="fw-bold mb-0 text-white">{{ $totalSemuaSurat ?? 0 }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-lg-1-5">
                 <div class="card p-3 border-0 shadow-sm h-100" style="border-radius: 16px;">
                     <div class="d-flex align-items-center">
                         <div class="p-3 bg-success bg-opacity-10 rounded-circle me-3 d-flex justify-content-center align-items-center" style="width: 55px; height: 55px;">
@@ -38,7 +63,8 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+
+            <div class="col-md-4 col-lg-1-5">
                 <div class="card p-3 border-0 shadow-sm h-100" style="border-radius: 16px;">
                     <div class="d-flex align-items-center">
                         <div class="p-3 bg-danger bg-opacity-10 rounded-circle me-3 d-flex justify-content-center align-items-center" style="width: 55px; height: 55px;">
@@ -51,7 +77,8 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+
+            <div class="col-md-6 col-lg-1-5">
                 <div class="card p-3 border-0 shadow-sm h-100" style="border-radius: 16px;">
                     <div class="d-flex align-items-center">
                         <div class="p-3 bg-warning bg-opacity-10 rounded-circle me-3 d-flex justify-content-center align-items-center" style="width: 55px; height: 55px;">
@@ -64,7 +91,8 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+
+            <div class="col-md-6 col-lg-1-5">
                 <div class="card p-3 border-0 shadow-sm h-100" style="border-radius: 16px;">
                     <div class="d-flex align-items-center">
                         <div class="p-3 bg-info bg-opacity-10 rounded-circle me-3 d-flex justify-content-center align-items-center" style="width: 55px; height: 55px;">
@@ -79,9 +107,10 @@
             </div>
         </div>
 
+        {{-- SISA KODE (GRAFIK, TABEL, DAN SCRIPT) SAMA PERSIS SEPERTI SEBELUMNYA --}}
+
         {{-- 3. Row Charts (GRAFIK STACKED) --}}
         <div class="row mb-4">
-            {{-- Grafik Batang (Tren Bulanan Stacked) --}}
             <div class="col-lg-8 mb-3 mb-lg-0">
                 <div class="card border-0 shadow-sm h-100" style="border-radius: 16px;">
                     <div class="card-header bg-white py-3 border-0 d-flex align-items-center">
@@ -96,14 +125,13 @@
                 </div>
             </div>
 
-            {{-- Grafik Donut (Komposisi) --}}
             <div class="col-lg-4">
                 <div class="card border-0 shadow-sm h-100" style="border-radius: 16px;">
                     <div class="card-header bg-white py-3 border-0 d-flex align-items-center">
                         <div class="bg-success bg-opacity-10 rounded p-2 me-2">
                             <i class="bi bi-pie-chart-fill text-success"></i>
                         </div>
-                        <h6 class="fw-bold mb-0">Komposisi Arsip</h6>
+                        <h6 class="fw-bold mb-0">Komposisi Arsip Tahun Ini</h6>
                     </div>
                     <div class="card-body d-flex justify-content-center align-items-center pt-0">
                         <canvas id="chartKomposisi" style="max-height: 250px;"></canvas>
@@ -114,7 +142,6 @@
 
         {{-- 4. Tabel & Log --}}
         <div class="row">
-            {{-- Tabel Surat Terbaru --}}
             <div class="col-lg-8 mb-4">
                 <div class="card border-0 shadow-sm h-100" style="border-radius: 16px; overflow: hidden;">
                     <div class="card-header bg-white py-3 border-0 d-flex justify-content-between align-items-center">
@@ -178,7 +205,6 @@
                 </div>
             </div>
 
-            {{-- Log Aktivitas (Timeline Style) --}}
             <div class="col-lg-4 mb-4">
                 <div class="card border-0 shadow-sm h-100" style="border-radius: 16px;">
                     <div class="card-header bg-white py-3 border-0 d-flex align-items-center">
@@ -191,7 +217,6 @@
                         <div class="timeline-wrapper mt-2" style="border-left: 2px dashed #cbd5e1; margin-left: 10px; padding-left: 20px;">
                             @forelse($logs as $log)
                                 <div class="mb-4 position-relative">
-                                    {{-- Titik Timeline --}}
                                     <div class="position-absolute bg-white border border-2 border-primary rounded-circle" style="width: 12px; height: 12px; left: -27.5px; top: 4px;"></div>
 
                                     <div class="d-flex justify-content-between align-items-center mb-1">
@@ -217,10 +242,9 @@
         </div>
     </div>
 
-    {{-- SCRIPTS (Clock & Charts) --}}
+    {{-- SCRIPTS --}}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // 1. Script Jam Digital
         function updateClock() {
             const now = new Date();
             const h = String(now.getHours()).padStart(2, '0');
@@ -232,10 +256,7 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        // 2. Konfigurasi Chart.js
         document.addEventListener("DOMContentLoaded", function() {
-
-            // A. Chart Bulanan (STACKED BAR)
             const ctxBar = document.getElementById('chartBulanan');
             if(ctxBar) {
                 new Chart(ctxBar, {
@@ -245,16 +266,14 @@
                         datasets: [
                             {
                                 label: 'Surat Masuk',
-                                // Data Surat Masuk
                                 data: {!! json_encode(array_values($masukBulanan ?? array_fill(0, 12, 0))) !!},
-                                backgroundColor: '#10b981', // Hijau STMC
+                                backgroundColor: '#10b981',
                                 borderRadius: 4
                             },
                             {
                                 label: 'Surat Keluar',
-                                // Data Surat Keluar
                                 data: {!! json_encode(array_values($keluarBulanan ?? array_fill(0, 12, 0))) !!},
-                                backgroundColor: '#ef4444', // Merah Semen Tonasa
+                                backgroundColor: '#ef4444',
                                 borderRadius: 4
                             }
                         ]
@@ -263,30 +282,17 @@
                         responsive: true,
                         maintainAspectRatio: false,
                         scales: {
-                            x: {
-                                stacked: true, // MENGAKTIFKAN STACKED DI SUMBU X
-                                grid: { display: false }
-                            },
-                            y: {
-                                stacked: true, // MENGAKTIFKAN STACKED DI SUMBU Y
-                                beginAtZero: true,
-                                grid: { borderDash: [2, 4] },
-                                ticks: { precision: 0, stepSize: 1 }
-                            }
+                            x: { stacked: true, grid: { display: false } },
+                            y: { stacked: true, beginAtZero: true, grid: { borderDash: [2, 4] }, ticks: { precision: 0, stepSize: 1 } }
                         },
                         plugins: {
-                            legend: {
-                                display: true,
-                                position: 'top',
-                                labels: { usePointStyle: true, boxWidth: 8 }
-                            },
+                            legend: { display: true, position: 'top', labels: { usePointStyle: true, boxWidth: 8 } },
                             tooltip: { mode: 'index', intersect: false }
                         }
                     }
                 });
             }
 
-            // B. Chart Komposisi (Doughnut)
             const ctxPie = document.getElementById('chartKomposisi');
             if(ctxPie) {
                 new Chart(ctxPie, {
@@ -295,7 +301,7 @@
                         labels: ['Surat Masuk', 'Surat Keluar'],
                         datasets: [{
                             data: [{{ $totalMasuk ?? 0 }}, {{ $totalKeluar ?? 0 }}],
-                            backgroundColor: ['#10b981', '#ef4444'], // Hijau & Merah Logo
+                            backgroundColor: ['#10b981', '#ef4444'],
                             borderWidth: 2,
                             borderColor: '#ffffff',
                             hoverOffset: 5

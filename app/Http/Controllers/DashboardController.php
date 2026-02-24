@@ -29,6 +29,8 @@ class DashboardController extends Controller
         $q->where('sifat', 'external');
     })->count();
 
+    $totalSemuaSurat = Surat::count();
+
     // 3. Data untuk Grafik Donat (Total Tahun Ini) - DISESUAIKAN
     $totalMasuk = Surat::whereHas('category', function($q) {
         $q->where('jenis', 'masuk');
@@ -75,6 +77,7 @@ class DashboardController extends Controller
         'masukHariIni', 'keluarHariIni',
         'internalCount', 'externalCount',
         'totalMasuk', 'totalKeluar',
+        'totalSemuaSurat',
         'masukBulanan', 'keluarBulanan', // Variabel baru untuk Stacked Chart
         'suratTerbaru', 'logs'
     ));

@@ -26,12 +26,12 @@ class UserController extends Controller
     {
         $user = Auth::user();
         $request->validate([
-            'name' => 'required|string|max:255',
+            'nama_lengkap' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
         ]);
 
-        // dd(gettype($user), is_object($user) ? get_class($user) : null, $user);
-        $user->update($request->only('name', 'email'));
+        
+        $user->update($request->only('nama_lengkap', 'email'));
         return redirect()->back()->with('success_profile', 'Profil berhasil diperbarui!');
     }
 
