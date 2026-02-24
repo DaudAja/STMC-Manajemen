@@ -1,100 +1,124 @@
 @extends('layouts.Master')
 
 @section('content')
-{{-- container-fluid p-0 memastikan tampilan penuh hingga tepi layar --}}
-<div class="container-fluid p-0 animate__animated animate__fadeIn">
-    <div class="row m-0">
-        <div class="col-12 p-0">
-            <div class="card border-0 shadow-none" style="min-height: 100vh; border-radius: 0;">
-
-                {{-- Header Full Width --}}
-                <div class="card-header bg-white py-4 px-4 border-bottom">
-                    <h5 class="fw-bold mb-0 text-dark">
-                        <i class="bi bi-file-earmark-plus me-2 text-primary"></i> Input Arsip Surat Baru
-                    </h5>
-                    <p class="text-muted small mb-0 mt-1">Gunakan formulir ini untuk mengarsipkan surat Internal maupun External secara sistematis.</p>
+<div class="container-fluid animate__animated animate__fadeIn">
+    {{-- Bagian Header --}}
+    <div class="row mb-4">
+        <div class="col-12">
+            <h4 class="fw-bold text-dark d-flex align-items-center">
+                <div class="rounded-circle d-flex justify-content-center align-items-center me-3 shadow-sm" style="width: 40px; height: 40px; background: rgba(16, 185, 129, 0.1);">
+                    <i class="bi bi-file-earmark-plus" style="color: var(--stmc-primary); font-size: 1.2rem;"></i>
                 </div>
+                Input Arsip Surat Baru
+            </h4>
+            <p class="text-muted ms-5 mb-0" style="font-size: 0.9rem;">Gunakan formulir ini untuk mengarsipkan surat Internal maupun External secara sistematis.</p>
+        </div>
+    </div>
 
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <div class="card border-0 shadow-sm" style="border-radius: 16px;">
                 <div class="card-body p-4 p-md-5">
                     <form action="{{ route('surat.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
-                        <div class="row g-2">
 
-                            {{-- 1. Pilihan Sifat Surat --}}
+                        {{-- SEKSI 1: KLASIFIKASI --}}
+                        <div class="row g-4 mb-4">
+                            <div class="col-12">
+                                <h6 class="text-uppercase fw-bold text-secondary" style="font-size: 0.75rem; letter-spacing: 1px;">
+                                    <i class="bi bi-tags me-2"></i>1. Klasifikasi Surat
+                                </h6>
+                                <hr class="mt-2 mb-0 opacity-25">
+                            </div>
+
                             <div class="col-md-4">
-                                <label class="form-label fw-bold">1. Sifat Surat</label>
-                                <select id="sifat_surat" name="sifat_surat" class="form-select form-select-lg shadow-sm" required>
+                                <label class="form-label fw-bold small text-dark">Sifat Surat</label>
+                                <select id="sifat_surat" name="sifat_surat" class="form-select form-select-lg shadow-sm border-light-subtle" required>
                                     <option value="external">Eksternal</option>
                                     <option value="internal">Internal</option>
                                 </select>
                             </div>
 
-                            {{-- 2. Pilihan Jenis Arus --}}
                             <div class="col-md-4">
-                                <label class="form-label fw-bold">2. Jenis Arus Surat</label>
-                                <select id="jenis_surat" name="jenis_surat" class="form-select form-select-lg shadow-sm" required>
+                                <label class="form-label fw-bold small text-dark">Jenis Arus Surat</label>
+                                <select id="jenis_surat" name="jenis_surat" class="form-select form-select-lg shadow-sm border-light-subtle" required>
                                     <option value="keluar">Surat Keluar</option>
                                     <option value="masuk">Surat Masuk</option>
                                 </select>
                             </div>
 
-                            {{-- 3. Kategori (Dinamis berdasarkan Sifat & Jenis) --}}
                             <div class="col-md-4">
-                                <label class="form-label fw-bold">3. Kategori / Klasifikasi</label>
-                                <select id="category_id" name="category_id" class="form-select form-select-lg shadow-sm" required>
+                                <label class="form-label fw-bold small text-dark">Kategori / Klasifikasi</label>
+                                <select id="category_id" name="category_id" class="form-select form-select-lg shadow-sm border-light-subtle" required>
                                     <option value="">-- Pilih Kategori --</option>
                                 </select>
                             </div>
+                        </div>
 
-                            {{-- Nomor Surat Otomatis / Manual --}}
+                        {{-- SEKSI 2: DETAIL SURAT --}}
+                        <div class="row g-4 mb-4">
+                            <div class="col-12 mt-5">
+                                <h6 class="text-uppercase fw-bold text-secondary" style="font-size: 0.75rem; letter-spacing: 1px;">
+                                    <i class="bi bi-info-circle me-2"></i>2. Informasi Detail Surat
+                                </h6>
+                                <hr class="mt-2 mb-0 opacity-25">
+                            </div>
+
                             <div class="col-md-12">
-                                <label class="form-label fw-bold">Nomor Surat</label>
-                                <div class="input-group input-group-sm shadow-sm">
-                                    <span class="input-group-text bg-light text-primary"><i class="bi bi-hash"></i></span>
-                                    <input type="text" id="nomor_surat_display" name="nomor_surat" class="form-control bg-light fw-bold" placeholder="Pilih kategori untuk melihat nomor..." required readonly>
+                                <label class="form-label fw-bold small text-dark">Nomor Surat</label>
+                                <div class="input-group shadow-sm">
+                                    <span class="input-group-text bg-light text-primary border-light-subtle"><i class="bi bi-hash"></i></span>
+                                    <input type="text" id="nomor_surat_display" name="nomor_surat" class="form-control form-control-lg bg-light fw-bold border-light-subtle" placeholder="Pilih kategori untuk melihat nomor..." required readonly>
                                 </div>
-                                <small class="text-muted mt-2 d-block">* Khusus Surat Masuk, nomor dapat diketik manual setelah memilih kategori.</small>
+                                <small class="text-muted mt-2 d-block" style="font-size: 0.75rem;">* Khusus Surat Masuk, nomor dapat diketik manual setelah memilih kategori.</small>
                             </div>
 
-                            {{-- Perihal --}}
                             <div class="col-md-12">
-                                <label class="form-label fw-bold">Perihal / Isi Ringkas Surat</label>
-                                <input type="text" name="nama_surat" class="form-control form-control-lg shadow-sm" placeholder="Contoh: Permohonan Kerjasama Vendor atau Nota Dinas Rapat" required>
+                                <label class="form-label fw-bold small text-dark">Perihal / Isi Ringkas Surat</label>
+                                <div class="input-group shadow-sm">
+                                    <span class="input-group-text bg-white border-light-subtle"><i class="bi bi-card-text text-muted"></i></span>
+                                    <input type="text" name="nama_surat" class="form-control form-control-lg border-light-subtle" placeholder="Contoh: Permohonan Kerjasama Vendor atau Nota Dinas Rapat" required>
+                                </div>
                             </div>
 
-                            {{-- Tanggal --}}
                             <div class="col-md-6">
-                                <label class="form-label fw-bold text-secondary">Tanggal Surat</label>
-                                <input type="date" name="tanggal_surat" class="form-control form-control-lg shadow-sm" value="{{ date('Y-m-d') }}" required>
+                                <label class="form-label fw-bold small text-secondary">Tanggal Surat</label>
+                                <div class="input-group shadow-sm">
+                                    <span class="input-group-text bg-white border-light-subtle"><i class="bi bi-calendar-event text-muted"></i></span>
+                                    <input type="date" name="tanggal_surat" class="form-control form-control-lg border-light-subtle" value="{{ date('Y-m-d') }}" required>
+                                </div>
                             </div>
 
-                            {{-- Upload PDF --}}
+                            {{-- SEKSI 3: DOKUMEN --}}
                             <div class="col-md-6">
-                                <label class="form-label fw-bold text-secondary">Dokumen Scan (PDF)</label>
-                                <input type="file" name="foto_bukti" id="file_pdf" class="form-control form-control-lg shadow-sm" accept=".pdf" required>
-                                <small class="text-muted">Pastikan format file PDF (Maks. 5MB)</small>
+                                <label class="form-label fw-bold small text-secondary">Dokumen Scan (PDF)</label>
+                                <div class="input-group shadow-sm">
+                                    <span class="input-group-text bg-white border-light-subtle"><i class="bi bi-file-earmark-pdf text-danger"></i></span>
+                                    <input type="file" name="foto_bukti" id="file_pdf" class="form-control form-control-lg border-light-subtle" accept=".pdf" required>
+                                </div>
+                                <small class="text-muted mt-2 d-block" style="font-size: 0.75rem;">Format file: PDF (Maks. 5MB)</small>
                             </div>
 
                             {{-- Alert File Terpilih --}}
-                            <div class="col-12 d-none" id="pdf-alert">
-                                <div class="alert alert-success d-flex align-items-center shadow-sm">
+                            <div class="col-12 d-none mt-3" id="pdf-alert">
+                                <div class="alert alert-success d-flex align-items-center shadow-sm border-0 mb-0">
                                     <i class="bi bi-file-earmark-check-fill me-2 fs-4"></i>
                                     <div>
-                                        <span id="pdf-name" class="fw-bold">File terpilih.</span>
+                                        <span id="pdf-name" class="fw-bold small">File terpilih.</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <hr class="my-5">
-
-                        <div class="d-flex justify-content-between align-items-center mb-5">
-                            <a href="/dashboard" class="btn btn-light btn-lg px-4 text-muted border">
-                                <i class="bi bi-arrow-left me-1"></i> Batal
-                            </a>
-                            <button type="submit" class="btn btn-primary btn-lg px-5 rounded-pill shadow">
-                                <i class="bi bi-cloud-arrow-up me-2"></i> Simpan Arsip Surat
-                            </button>
+                        <div class="row mt-5">
+                            <div class="col-12 d-flex justify-content-between align-items-center">
+                                <a href="/dashboard" class="btn btn-light px-4 text-muted border border-light-subtle rounded-pill">
+                                    <i class="bi bi-arrow-left me-1"></i> Batal
+                                </a>
+                                <button type="submit" class="btn btn-success btn-lg px-5 rounded-pill shadow-sm d-flex align-items-center" style="background-color: var(--stmc-primary); border: none;">
+                                    <i class="bi bi-cloud-arrow-up-fill me-2"></i> Simpan Arsip Surat
+                                </button>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -124,7 +148,6 @@ document.addEventListener('DOMContentLoaded', function() {
         nomorDisplay.readOnly = true;
 
         try {
-            // Memanggil Route dengan 2 parameter: /get-categories/{sifat}/{jenis}
             const response = await fetch(`/get-categories/${sifat}/${jenis}`);
             const data = await response.json();
 
@@ -139,10 +162,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Jalankan filter saat halaman pertama dibuka
     fetchCategories();
 
-    // Jalankan filter saat Sifat atau Jenis diubah
     sifatSurat.addEventListener('change', fetchCategories);
     jenisSurat.addEventListener('change', fetchCategories);
 
@@ -157,7 +178,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const response = await fetch(`/get-nomor-surat/${catId}`);
             const data = await response.json();
 
-            // Logika: Jika sistem memberikan string 'MANUAL' (untuk surat masuk), buka inputnya
             if (data.nomor === 'MANUAL') {
                 nomorDisplay.value = '';
                 nomorDisplay.readOnly = false;

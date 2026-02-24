@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Dashboard') | STMC Digital Klinik</title>
+    <title>@yield('title')Sistem Informasi Manajemen Surat - STMC</title>
+    <link rel="icon" type="image/png" href="/Images/STMC.png">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
@@ -17,37 +18,43 @@
 
     <style>
         :root {
-            --stmc-primary: #0d6efd;
-            --stmc-dark: #2c3e50;
-            --stmc-sidebar-bg: #1a252f;
+            --stmc-primary: #10b981;
+            --stmc-primary-dark: #059669;
+            --stmc-dark: #0f172a;
+            --stmc-sidebar-bg: #1e293b;
             --sidebar-width: 280px;
+            --sidebar-collapsed-width: 80px;
+            /* Lebar saat dikecilkan */
         }
 
         body {
-            background-color: #f8f9fa;
+            background-color: #f3f4f6;
             font-family: 'Inter', sans-serif;
             overflow-x: hidden;
             display: flex;
-            font-size: 12px;
-            line-height: 1;
+            font-size: 13px;
+            line-height: 1.5;
         }
 
         .form-control,
         .form-select,
         .btn {
-            font-size: 12px;
-            padding: 0.5rem 0.75rem;
+            font-size: 13px;
+            padding: 0.5rem 0.85rem;
+            border-radius: 6px;
         }
 
         h5 {
-            font-size: 1.1rem;
+            font-size: 1.15rem;
         }
 
         h6 {
-            font-size: .95rem;
+            font-size: 1rem;
         }
 
-        /* Sidebar Styling */
+        /* =========================================
+           Sidebar Styling
+           ========================================= */
         .sidebar {
             position: fixed;
             top: 0;
@@ -55,84 +62,233 @@
             bottom: 0;
             width: var(--sidebar-width);
             height: 100vh;
-            background: var(--stmc-sidebar-bg);
-            color: white;
-            transition: all 0.3s ease;
+            background: linear-gradient(180deg, var(--stmc-dark) 0%, var(--stmc-sidebar-bg) 100%);
+            color: #d1d5db;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 1050;
             display: flex;
             flex-direction: column;
+            box-shadow: 4px 0 15px rgba(0, 0, 0, 0.05);
         }
 
         .sidebar-header {
-            padding: 2rem 1.5rem;
-            background: rgba(0, 0, 0, 0.2);
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.15);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             text-align: center;
         }
 
         .sidebar-content {
             flex-grow: 1;
             overflow-y: auto;
-            padding-top: 1rem;
+            padding: 1rem 0.8rem;
+            overflow-x: hidden;
         }
 
-        /* Scrollbar Sidebar */
         .sidebar-content::-webkit-scrollbar {
-            width: 4px;
+            width: 5px;
+        }
+
+        .sidebar-content::-webkit-scrollbar-track {
+            background: transparent;
         }
 
         .sidebar-content::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
         }
 
-        /* Nav Link Styling */
+        .sidebar-content::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
         .nav-link {
-            color: rgba(255, 255, 255, 0.6);
-            margin: 0.2rem 1rem;
-            padding: 0.8rem 1.2rem;
+            color: #9ca3af;
+            margin: 0.25rem 0;
+            padding: 0.75rem 1rem;
             border-radius: 8px;
-            font-size: 12px;
+            font-size: 13px;
+            font-weight: 500;
             display: flex;
             align-items: center;
-            transition: 0.2s ease;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            white-space: nowrap;
         }
 
         .nav-link i {
-            font-size: 1.1rem;
-            width: 30px;
+            font-size: 1.15rem;
+            width: 32px;
+            text-align: center;
+            margin-right: 8px;
+            transition: transform 0.2s ease;
         }
 
         .nav-link:hover {
-            color: white;
-            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateX(4px);
+        }
+
+        .nav-link:hover i {
+            transform: scale(1.1);
+            color: var(--stmc-primary);
         }
 
         .nav-link.active {
-            color: white !important;
+            color: #ffffff !important;
             background: var(--stmc-primary) !important;
-            box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+            font-weight: 600;
         }
 
-        /* Main Content Area */
+        .nav-link.active i {
+            color: #ffffff !important;
+        }
+
+        .sidebar-divider {
+            margin: 1.5rem 0.5rem 0.5rem;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #6b7280;
+            white-space: nowrap;
+        }
+
+        #adminMenu .nav-link {
+            font-size: 12px;
+            padding: 0.6rem 1rem;
+            margin-left: 0.5rem;
+            border-left: 2px solid transparent;
+            border-radius: 0 6px 6px 0;
+        }
+
+        #adminMenu .nav-link:hover {
+            border-left-color: var(--stmc-primary);
+            background: transparent;
+            transform: translateX(2px);
+        }
+
+        #adminMenu .nav-link.active {
+            background: rgba(16, 185, 129, 0.1) !important;
+            color: var(--stmc-primary) !important;
+            border-left-color: var(--stmc-primary);
+            box-shadow: none;
+        }
+
+        .nav-link[aria-expanded="true"] .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+
+        .sidebar-footer {
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: auto;
+        }
+
+        .btn-panduan {
+            background: rgba(255, 255, 255, 0.05);
+            color: #60a5fa !important;
+            border: 1px dashed rgba(96, 165, 250, 0.4);
+        }
+
+        .btn-panduan:hover {
+            background: rgba(96, 165, 250, 0.1);
+            color: #93c5fd !important;
+            border-color: #60a5fa;
+            transform: translateY(-2px);
+        }
+
+        /* =========================================
+           Sidebar Collapsed State (Efek Dikecilkan)
+           ========================================= */
+        .sidebar.collapsed {
+            width: var(--sidebar-collapsed-width);
+        }
+
+        .sidebar.collapsed .sidebar-header {
+            padding: 1.5rem 0.5rem;
+        }
+
+        /* Sembunyikan teks saat collapse */
+        .sidebar.collapsed .sidebar-header h6,
+        .sidebar.collapsed .sidebar-header div.text-white-50,
+        .sidebar.collapsed .sidebar-header .logo-stmc,
+        .sidebar.collapsed .nav-link span,
+        .sidebar.collapsed .sidebar-divider,
+        .sidebar.collapsed .dropdown-arrow,
+        .sidebar.collapsed .btn-panduan span,
+        .sidebar.collapsed .sidebar-footer form button span {
+            display: none !important;
+        }
+
+        /* Sesuaikan posisi ikon saat collapse */
+        .sidebar.collapsed .nav-link {
+            justify-content: center;
+            padding: 0.8rem 0;
+        }
+
+        .sidebar.collapsed .nav-link i {
+            margin-right: 0;
+            font-size: 1.3rem;
+        }
+
+        .sidebar.collapsed .sidebar-footer form button {
+            padding: 0.8rem 0;
+        }
+
+        .sidebar.collapsed .sidebar-footer form button i {
+            margin-right: 0 !important;
+            font-size: 1.3rem;
+        }
+
+        .sidebar.collapsed #adminMenu .nav-link {
+            margin-left: 0;
+            justify-content: center;
+        }
+
+        /* =========================================
+           Main Content Area
+           ========================================= */
         .main-content {
             margin-left: var(--sidebar-width);
             width: calc(100% - var(--sidebar-width));
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar.collapsed~.main-content {
+            margin-left: var(--sidebar-collapsed-width);
+            width: calc(100% - var(--sidebar-collapsed-width));
         }
 
         .top-navbar {
-            background: white;
+            background: #ffffff;
             height: 70px;
             padding: 0 2rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
             position: sticky;
             top: 0;
             z-index: 1000;
+        }
+
+        /* Tombol Toggle di Navbar */
+        .btn-toggle-sidebar {
+            background: transparent;
+            color: #4b5563;
+            transition: all 0.2s;
+        }
+
+        .btn-toggle-sidebar:hover {
+            background: #f3f4f6;
+            color: var(--stmc-primary);
         }
 
         .content-body {
@@ -140,22 +296,18 @@
             flex: 1;
         }
 
-        .sidebar-divider {
-            margin: 1.5rem 1.5rem 0.5rem;
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: rgba(255, 255, 255, 0.3);
-        }
-
-        /* Responsive */
+        /* Responsive Mobile */
         @media (max-width: 992px) {
             .sidebar {
                 margin-left: calc(-1 * var(--sidebar-width));
             }
 
-            .main-content {
+            .sidebar.collapsed {
+                width: var(--sidebar-width);
+            }
+
+            .main-content,
+            .sidebar.collapsed~.main-content {
                 margin-left: 0;
                 width: 100%;
             }
@@ -169,119 +321,162 @@
 
 <body>
 
-    <aside class="sidebar shadow" id="sidebar">
+    <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <div class="flex items-center gap-10">
-                <img src="{{ asset('Images/SemenTonasa.png') }}" alt="Logo 1" width="45">
-                <img src="{{ asset('Images/STMC.png') }}" alt="Logo 2" width="45">
+            <div class="d-flex justify-content-center align-items-center mb-2 gap-3">
+                <img src="{{ asset('Images/SemenTonasa.png') }}" alt="Logo Semen Tonasa" width="45"
+                    style="filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.5));">
+                <img src="{{ asset('Images/STMC.png') }}" alt="Logo STMC" width="45" class="logo-stmc"
+                    style="filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.5));">
             </div>
-            <h6 class="fw-bold mb-0 text-white">SIMAS-STMC</h6>
-            <span class="text-white-50" style="font-size: 10px; letter-spacing: 1px;">SISTEM MANAJEMEN INFORMASI ARSIP
-                SURAT</span>
-            <span class="text-white-50" style="font-size: 10px; letter-spacing: 1px;">SEMEN TONASA MEDICAL CENTER</span>
+            <h6 class="fw-bold mb-1 text-white" style="letter-spacing: 0.5px;">SIMAS STMC</h6>
+            <div class="text-white-50" style="font-size: 9px; letter-spacing: 0.5px; line-height: 1.2;">
+                SISTEM MANAJEMEN INFORMASI ARSIP SURAT<br>SEMEN TONASA MEDICAL CENTER
+            </div>
         </div>
 
         <div class="sidebar-content">
-            <div class="sidebar-divider">Utama</div>
+            <div class="sidebar-divider">Menu Utama</div>
             <a href="/dashboard" class="nav-link {{ Request::is('dashboard') ? 'active' : '' }}">
-                <i class="bi bi-grid-1x2-fill"></i> Dashboard
+                <i class="bi bi-grid-1x2-fill"></i> <span>Dashboard</span>
             </a>
             <a href="/profile" class="nav-link {{ Request::is('profile') ? 'active' : '' }}">
-                <i class="bi bi-person-badge-fill"></i> Profil Saya
+                <i class="bi bi-person-badge-fill"></i> <span>Profil Saya</span>
             </a>
 
-            <div class="sidebar-divider">Arsip Surat</div>
+            <div class="sidebar-divider">Manajemen Arsip</div>
             <a href="/surat/input" class="nav-link {{ Request::is('surat/input') ? 'active' : '' }}">
-                <i class="bi bi-plus-square-fill"></i> Input Surat
+                <i class="bi bi-cloud-arrow-up-fill text-success"
+                    style="{{ Request::is('surat/input') ? 'color: white !important;' : '' }}"></i> <span>Input
+                    Surat</span>
             </a>
             <a href="/surat/masuk" class="nav-link {{ Request::is('surat/masuk*') ? 'active' : '' }}">
-                <i class="bi bi-arrow-down-left-circle-fill"></i> Surat Masuk
+                <i class="bi bi-box-arrow-in-down-right"></i> <span>Surat Masuk</span>
             </a>
             <a href="/surat/keluar" class="nav-link {{ Request::is('surat/keluar*') ? 'active' : '' }}">
-                <i class="bi bi-arrow-up-right-circle-fill"></i> Surat Keluar
+                <i class="bi bi-box-arrow-up-right"></i> <span>Surat Keluar</span>
             </a>
             <a href="/laporan" class="nav-link {{ Request::is('laporan*') ? 'active' : '' }}">
-                <i class="bi bi-archive-fill"></i> Laporan / Rekap
+                <i class="bi bi-printer-fill text-info"
+                    style="{{ Request::is('laporan*') ? 'color: white !important;' : '' }}"></i> <span>Cetak
+                    Laporan</span>
             </a>
 
             @if (auth()->check() && auth()->user()->role == 'admin')
                 <div class="sidebar-divider">Administrator</div>
 
-                <div class="nav-item">
+                <div class="nav-item mb-2">
                     <a class="nav-link d-flex justify-content-between align-items-center {{ Request::is('admin*') ? '' : 'collapsed' }}"
-                        data-bs-toggle="collapse" href="#adminMenu" role="button"
+                        data-bs-toggle="collapse" href="#adminMenu" role="button" id="adminMenuToggle"
                         aria-expanded="{{ Request::is('admin*') ? 'true' : 'false' }}">
-                        <span>
-                            <i class="bi bi-shield-lock-fill"></i> Panel Admin
-                        </span>
-                        <i class="bi bi-chevron-down ms-auto dropdown-arrow"
-                            style="transition: 0.3s; font-size: 0.8rem;"></i>
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-shield-fill-check text-warning"
+                                style="{{ Request::is('admin*') ? 'color: white !important;' : '' }}"></i>
+                            <span>Panel Admin</span>
+                        </div>
+                        <i class="bi bi-chevron-down dropdown-arrow" style="transition: 0.3s; font-size: 0.8rem;"></i>
                     </a>
 
-                    <div class="collapse {{ Request::is('admin*') ? 'show' : '' }}" id="adminMenu">
-                        <div class="bg-dark bg-opacity-25 mx-3 rounded-3 py-1 mb-2">
+                    <div class="collapse {{ Request::is('admin*') ? 'show' : '' }} mt-1" id="adminMenu">
+                        <div class="bg-dark bg-opacity-50 rounded-3 py-2 ms-2 me-1">
                             <a href="{{ route('admin.users.list') }}"
-                                class="nav-link py-2 {{ Request::routeIs('admin.users.list') ? 'active' : '' }}"
-                                style="margin: 0.2rem 0.5rem;">
-                                <i class="bi bi-person-gear"></i> Manajemen User
+                                class="nav-link {{ Request::routeIs('admin.users.list') ? 'active' : '' }}">
+                                <i class="bi bi-people-fill"></i> <span>Manajemen User</span>
                             </a>
                             <a href="{{ route('admin.users.index') }}"
-                                class="nav-link py-2 {{ Request::routeIs('admin.users.index') ? 'active' : '' }}"
-                                style="margin: 0.2rem 0.5rem;">
-                                <i class="bi bi-person-check-fill"></i> Verifikasi
+                                class="nav-link {{ Request::routeIs('admin.users.index') ? 'active' : '' }}">
+                                <i class="bi bi-person-check-fill"></i> <span>Verifikasi User</span>
                             </a>
                             <a href="{{ route('admin.admin.logs') }}"
-                                class="nav-link py-2 {{ Request::routeIs('admin.admin.logs') ? 'active' : '' }}"
-                                style="margin: 0.2rem 0.5rem;">
-                                <i class="bi bi-terminal"></i> Aktivitas
+                                class="nav-link {{ Request::routeIs('admin.admin.logs') ? 'active' : '' }}">
+                                <i class="bi bi-card-text"></i> <span>Log Aktivitas</span>
                             </a>
                             <a href="{{ route('admin.users.trash') }}"
-                                class="nav-link py-2 {{ Request::routeIs('admin.users.trash') ? 'active' : '' }}"
-                                style="margin: 0.2rem 0.5rem;">
-                                <i class="bi bi-trash3-fill text-danger"></i> Arsip User
+                                class="nav-link {{ Request::routeIs('admin.users.trash') ? 'active' : '' }}">
+                                <i class="bi bi-person-x-fill text-danger"></i> <span>Arsip User</span>
                             </a>
                             <a href="{{ route('admin.surat.trash') }}"
-                                class="nav-link py-2 {{ Request::is('admin/surat/trash') ? 'active' : '' }}"
-                                style="margin: 0.2rem 0.5rem;">
-                                <i class="bi bi-trash-fill text-warning"></i> Sampah Surat
+                                class="nav-link {{ Request::is('admin/surat/trash') ? 'active' : '' }}">
+                                <i class="bi bi-trash3-fill text-danger"></i> <span>Sampah Surat</span>
                             </a>
                         </div>
                     </div>
                 </div>
             @endif
+        </div>
 
-            <div style="padding: 15px; border-top: 1px solid rgba(255,255,255,0.1); margin-top: auto;">
-                <form action="{{ route('logout') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="btn btn-outline-light btn-sm w-100 rounded-pill py-2">
-                        <i class="bi bi-box-arrow-left me-2"></i> Keluar
-                    </button>
-                </form>
-            </div>
+        <div class="sidebar-footer">
+            <a href="/Panduan_SIMAS.pdf" target="_blank"
+                class="nav-link btn-panduan mb-3 justify-content-center fw-bold">
+                <i class="bi bi-journal-bookmark-fill" style="margin:0; width:auto; margin-right:8px;"></i> <span>Buku
+                    Panduan</span>
+            </a>
+
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit"
+                    class="btn btn-danger btn-sm w-100 rounded-2 py-2 fw-semibold d-flex align-items-center justify-content-center"
+                    style="transition: 0.2s;">
+                    <i class="bi bi-box-arrow-right me-2 fs-6"></i> <span>Keluar Sistem</span>
+                </button>
+            </form>
+        </div>
     </aside>
 
     <main class="main-content">
-        <header class="top-navbar">
+        <header class="top-navbar px-3 px-md-4">
             <div class="d-flex align-items-center">
-                <button class="btn btn-light d-lg-none me-3" id="sidebarToggle">
-                    <i class="bi bi-list fs-4"></i>
+                <button
+                    class="btn btn-toggle-sidebar border-0 me-3 shadow-sm rounded-circle d-flex align-items-center justify-content-center"
+                    id="mainSidebarToggle" style="width: 40px; height: 40px; transition: 0.3s;">
+                    <i class="bi bi-list fs-4 text-dark"></i>
                 </button>
-                <span class="text-muted small d-none d-md-block fw-medium">
-                    <i class="bi bi-calendar3 me-2 text-primary"></i>{{ date('d F Y') }}
-                </span>
+
+                <div
+                    class="d-none d-md-flex align-items-center bg-light px-3 py-2 rounded-pill border border-white shadow-sm">
+                    <i class="bi bi-calendar3 me-2" style="color: var(--stmc-primary);"></i>
+                    <span class="text-secondary small fw-bold"
+                        style="letter-spacing: 0.5px;">{{ date('d F Y') }}</span>
+                </div>
             </div>
 
-            <div class="d-flex align-items-center">
-                <div class="text-end me-3 d-none d-sm-block">
-                    <p class="fw-bold mb-0 lh-1" style="font-size: 0.9rem;">{{ auth()->user()->nama_lengkap }}</p>
-                    <small class="text-primary fw-bold text-uppercase"
-                        style="font-size: 0.7rem; letter-spacing: 0.5px;">
-                        {{ auth()->user()->role }}
+            <div class="d-flex align-items-center gap-2 gap-md-3">
+                <div class="text-end d-none d-sm-block">
+                    <p class="fw-bold mb-0 lh-1 text-dark" style="font-size: 0.9rem;">
+                        {{ auth()->user()->nama_lengkap }}
+                    </p>
+                    <small
+                        class="badge bg-success bg-opacity-10 text-success border border-success-subtle rounded-pill px-2 mt-1"
+                        style="font-size: 0.6rem; letter-spacing: 0.5px;">
+                        {{ strtoupper(auth()->user()->role) }}
                     </small>
                 </div>
-                <div class="bg-primary text-white rounded-circle shadow-sm d-flex align-items-center justify-content-center"
-                    style="width: 42px; height: 42px; background: var(--stmc-primary) !important;">
-                    <i class="bi bi-person-fill fs-5"></i>
+
+                <div class="dropdown">
+                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center border border-2 border-white"
+                        style="width: 45px; height: 45px; background: var(--stmc-primary); color: white; fw-bold; cursor: pointer; transition: 0.3s;"
+                        id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="fw-bold" style="font-size: 1.1rem;">
+                            {{ strtoupper(substr(auth()->user()->nama_lengkap, 0, 1)) }}
+                        </span>
+                    </div>
+
+                    <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg mt-3"
+                        style="border-radius: 12px; min-width: 180px;">
+                        <li><a class="dropdown-item py-2 small" href="/profile"><i
+                                    class="bi bi-person me-2 text-success"></i> Profil Saya</a></li>
+                        <li>
+                            <hr class="dropdown-divider opacity-10">
+                        </li>
+                        <li>
+                            <form action="{{ route('logout') }}" method="POST" class="m-0">
+                                @csrf
+                                <button type="submit" class="dropdown-item py-2 small text-danger">
+                                    <i class="bi bi-box-arrow-right me-2"></i> Keluar Sistem
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </header>
@@ -291,12 +486,14 @@
                 <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm mb-4 animate__animated animate__fadeInDown"
                     role="alert">
                     <div class="d-flex align-items-center">
-                        <i class="bi bi-check-circle-fill me-2 fs-5"></i>
+                        <i class="bi bi-check-circle-fill me-3 fs-4 text-success"></i>
                         <div>
-                            <strong>Berhasil!</strong> {{ session('success') }}
+                            <h6 class="mb-0 fw-bold">Berhasil!</h6>
+                            <small>{{ session('success') }}</small>
                         </div>
                     </div>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <button type="button" class="btn-close mt-1" data-bs-dismiss="alert"
+                        aria-label="Close"></button>
                 </div>
             @endif
 
@@ -304,15 +501,16 @@
                 <div class="alert alert-danger alert-dismissible fade show border-0 shadow-sm mb-4 animate__animated animate__shakeX"
                     role="alert">
                     <div class="d-flex align-items-center">
-                        <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
+                        <i class="bi bi-exclamation-triangle-fill me-3 fs-4 text-danger"></i>
                         <div>
-                            <strong>Akses Ditolak!</strong> {{ session('error') }}
+                            <h6 class="mb-0 fw-bold">Peringatan!</h6>
+                            <small>{{ session('error') }}</small>
                         </div>
                     </div>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <button type="button" class="btn-close mt-1" data-bs-dismiss="alert"
+                        aria-label="Close"></button>
                 </div>
             @endif
-            {{-- AKHIR BAGIAN ALERT --}}
 
             @yield('content')
         </div>
@@ -321,20 +519,47 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // Logika Sidebar Mobile
-        const sidebarToggle = document.getElementById('sidebarToggle');
+        // Logika DOM
         const sidebar = document.getElementById('sidebar');
+        const mainToggle = document.getElementById('mainSidebarToggle');
+        const adminMenuToggle = document.getElementById('adminMenuToggle');
 
-        if (sidebarToggle) {
-            sidebarToggle.addEventListener('click', () => {
-                sidebar.classList.toggle('active');
+        // 1. Cek State di LocalStorage untuk mode Desktop
+        if (localStorage.getItem('sidebarState') === 'collapsed') {
+            if (window.innerWidth > 992) {
+                sidebar.classList.add('collapsed');
+            }
+        }
+
+        // 2. Tombol Hamburger Menu (Mengatur Desktop & Mobile sekaligus)
+        if (mainToggle) {
+            mainToggle.addEventListener('click', () => {
+                if (window.innerWidth > 992) {
+                    // Mode Layar Besar: Toggle ukuran mini
+                    sidebar.classList.toggle('collapsed');
+                    localStorage.setItem('sidebarState', sidebar.classList.contains('collapsed') ? 'collapsed' :
+                        'expanded');
+                } else {
+                    // Mode HP: Tampilkan / Sembunyikan sidebar penuh
+                    sidebar.classList.toggle('active');
+                }
             });
         }
 
-        // Tutup sidebar jika user klik di luar pada tampilan mobile
+        // 3. Auto Expand jika klik Panel Admin tapi sidebar sedang dikecilkan
+        if (adminMenuToggle) {
+            adminMenuToggle.addEventListener('click', () => {
+                if (sidebar.classList.contains('collapsed')) {
+                    sidebar.classList.remove('collapsed');
+                    localStorage.setItem('sidebarState', 'expanded');
+                }
+            });
+        }
+
+        // 4. Tutup sidebar jika klik di luar (khusus tampilan mobile)
         document.addEventListener('click', (e) => {
             if (window.innerWidth <= 992) {
-                if (!sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
+                if (!sidebar.contains(e.target) && !mainToggle.contains(e.target)) {
                     sidebar.classList.remove('active');
                 }
             }
@@ -344,4 +569,4 @@
     @stack('scripts')
 </body>
 
-</html
+</html>

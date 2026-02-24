@@ -3,105 +3,170 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>STMC Klinik | Manajemen Surat Modern</title>
-    
+    <title>SIMAS - STMC | Sistem Informasi Manajemen Arsip Surat</title>
+
+    <link rel="icon" type="image/png" href="/Images/STMC.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
     <style>
         :root {
-            --primary-color: #0d6efd;
-            --accent-color: #18bc9c;
+            /* Warna diselaraskan dengan Master.blade.php (Tema STMC) */
+            --stmc-primary: #10b981; /* Hijau Medis */
+            --stmc-primary-dark: #059669;
+            --stmc-dark: #111827; /* Hitam elegan */
+            --stmc-accent: #ef4444; /* Merah Semen Tonasa (Aksen) */
         }
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #fff;
+            background-color: #f3f4f6; /* Sama dengan body Master */
+            margin: 0;
+            padding: 0;
         }
 
         /* Hero Section */
         .hero {
             position: relative;
-            min-height: 110vh; /* Lebih tinggi untuk menampung fitur */
-            background: url('{{ asset("Images/bg.jpg") }}') center/cover no-repeat;
+            min-height: 100vh;
+            /* Latar belakang menggunakan gradasi gelap elegan ala Master */
+            background: linear-gradient(135deg, var(--stmc-dark) 0%, #1e293b 100%);
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding-top: 80px;
-            padding-bottom: 200px; /* Ruang untuk gelombang */
+            justify-content: center;
+            padding: 40px 20px 150px 20px; /* Ruang bawah untuk gelombang */
+            overflow: hidden;
         }
 
+        /* Efek cahaya halus di background */
         .hero::before {
             content: "";
             position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(135deg, rgba(13, 110, 253, 0.85) 0%, rgba(24, 188, 156, 0.8) 100%);
+            top: -20%; right: -10%;
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: 1;
         }
 
         /* Glassmorphism Card Utama */
         .glass-card {
             position: relative;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 24px;
-            padding: 40px;
+            padding: 50px 40px;
             color: white;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-            max-width: 900px;
-            width: 90%;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            max-width: 800px;
+            width: 100%;
             z-index: 2;
         }
 
-        /* Fitur Card di dalam area Biru */
+        /* Logo Styling */
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .logo-img {
+            /* Shadow menyesuaikan bentuk logo asli, tanpa background putih */
+            filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.6));
+            transition: transform 0.3s ease;
+        }
+
+        .logo-img:hover {
+            transform: scale(1.05);
+        }
+
+        /* Tombol Modern */
+        .btn-modern {
+            padding: 12px 35px;
+            border-radius: 8px; /* Disesuaikan dengan Master */
+            font-weight: 600;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-login {
+            background: var(--stmc-primary);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-login:hover {
+            background: var(--stmc-primary-dark);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-outline-custom {
+            background: transparent;
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .btn-outline-custom:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border-color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Fitur Card */
         .feature-box {
             position: relative;
             z-index: 2;
             color: white;
-            margin-top: 60px;
+            margin-top: 50px;
+            max-width: 1000px;
         }
 
         .feature-item {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 25px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 30px 20px;
+            text-align: center;
             transition: 0.3s;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            height: 100%;
         }
 
         .feature-item:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-5px);
+            border-color: rgba(16, 185, 129, 0.3); /* Hover border warna hijau */
         }
 
-        .logo-glow {
-            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.5));
+        .feature-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--stmc-primary);
+            margin-bottom: 15px;
         }
 
-        .btn-modern {
-            padding: 12px 35px;
-            border-radius: 50px;
-            font-weight: 600;
-            transition: 0.3s;
-        }
-
-        .btn-login {
-            background: white;
-            color: var(--primary-color);
-            border: none;
-        }
-
-        .btn-login:hover {
-            background: var(--accent-color);
-            color: white;
-        }
-
-        /* CSS untuk Gelombang Putih */
+        /* Gelombang Putih di Bawah */
         .wave-container {
             position: absolute;
-            bottom: 0;
+            bottom: -1px; /* Mencegah garis batas tipis */
             left: 0;
             width: 100%;
             line-height: 0;
@@ -112,53 +177,66 @@
             position: relative;
             display: block;
             width: calc(100% + 1.3px);
-            height: 150px;
+            height: 120px;
         }
 
         .wave-container .shape-fill {
-            fill: #FFFFFF;
+            fill: #f3f4f6; /* Diselaraskan dengan warna body */
         }
     </style>
 </head>
 <body>
 
-    <section class="hero text-center">
-        <div class="glass-card animate__animated animate__fadeInDown mb-5">
-            <img src="{{ asset('Images/logoST.png') }}" alt="Logo" width="100" class="logo-glow mb-4">
-            <h1 class="display-4 fw-bold mb-2">STMC DIGITAL</h1>
-            <p class="fs-5 mb-4 opacity-75">Manajemen arsip surat klinik terintegrasi dan aman.</p>
+    <section class="hero">
+        <div class="glass-card animate__animated animate__fadeInDown">
+            <div class="logo-container">
+                <img src="{{ asset('Images/SemenTonasa.png') }}" alt="Logo Semen Tonasa" width="75" class="logo-img">
+                <img src="{{ asset('Images/STMC.png') }}" alt="Logo STMC" width="75" class="logo-img">
+            </div>
 
-            <div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
-                <a href="{{ route('login') }}" class="btn btn-modern btn-login shadow">
-                    <i class="bi bi-door-open-fill me-2"></i> Masuk Sistem
-                </a>
-                <a href="{{ route('register') }}" class="btn btn-modern btn-outline-light">
-                    <i class="bi bi-person-plus-fill me-2"></i> Daftar Akun
-                </a>
+            <div class="text-center">
+                <h1 class="fw-bold mb-3" style="letter-spacing: 1px;">SIMAS STMC</h1>
+                <p class="fs-6 mb-1 text-white-50" style="letter-spacing: 2px;">SISTEM MANAJEMEN INFORMASI ARSIP SURAT</p>
+                <p class="fs-6 mb-4 text-white-50" style="letter-spacing: 2px;">SEMEN TONASA MEDICAL CENTER</p>
+
+                <div class="d-flex flex-column flex-sm-row justify-content-center gap-3 mt-4">
+                    <a href="{{ route('login') }}" class="btn btn-modern btn-login">
+                        <i class="bi bi-door-open-fill me-2 fs-5"></i> Masuk Sistem
+                    </a>
+                    <a href="{{ route('register') }}" class="btn btn-modern btn-outline-custom">
+                        <i class="bi bi-person-plus-fill me-2 fs-5"></i> Daftar Akun
+                    </a>
+                </div>
             </div>
         </div>
 
         <div class="container feature-box animate__animated animate__fadeInUp animate__delay-1s">
-            <div class="row g-4">
+            <div class="row g-4 justify-content-center">
                 <div class="col-md-4">
                     <div class="feature-item">
-                        <i class="bi bi-shield-check fs-1 text-info"></i>
-                        <h4 class="mt-3">Terverifikasi</h4>
-                        <p class="small opacity-75">Persetujuan admin mutlak diperlukan untuk keamanan data.</p>
+                        <div class="feature-icon">
+                            <i class="bi bi-shield-check fs-2"></i>
+                        </div>
+                        <h5 class="fw-bold">Terverifikasi</h5>
+                        <p class="small text-white-50 mb-0">Persetujuan admin mutlak diperlukan untuk keamanan data.</p>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="feature-item">
-                        <i class="bi bi-file-earmark-pdf fs-1 text-info"></i>
-                        <h4 class="mt-3">Arsip Digital</h4>
-                        <p class="small opacity-75">Simpan bukti fisik dalam format digital yang rapi.</p>
+                        <div class="feature-icon">
+                            <i class="bi bi-file-earmark-pdf fs-2"></i>
+                        </div>
+                        <h5 class="fw-bold">Arsip Digital</h5>
+                        <p class="small text-white-50 mb-0">Simpan bukti fisik dalam format digital yang rapi dan terpusat.</p>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="feature-item">
-                        <i class="bi bi-clock-history fs-1 text-info"></i>
-                        <h4 class="mt-3">Riwayat Log</h4>
-                        <p class="small opacity-75">Pantau setiap aksi yang dilakukan oleh pengguna.</p>
+                        <div class="feature-icon">
+                            <i class="bi bi-clock-history fs-2"></i>
+                        </div>
+                        <h5 class="fw-bold">Riwayat Log</h5>
+                        <p class="small text-white-50 mb-0">Pantau setiap aksi yang dilakukan oleh pengguna secara real-time.</p>
                     </div>
                 </div>
             </div>
