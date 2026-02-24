@@ -233,7 +233,7 @@
                         </div>
                          @if(Auth::user()->role === 'admin')
                             <div class="mt-4 text-center border-top pt-3">
-                                <a href="{{ route('admin.admin.logs') }}" class="text-success text-decoration-none fw-bold small">Lihat Semua Log <i class="bi bi-arrow-right ms-1"></i></a>
+                                <a href="{{ route('admin.logs') }}" class="text-success text-decoration-none fw-bold small">Lihat Semua Log <i class="bi bi-arrow-right ms-1"></i></a>
                             </div>
                          @endif
                     </div>

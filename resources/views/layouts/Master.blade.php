@@ -420,7 +420,7 @@
                                 class="nav-link {{ Request::routeIs('admin.users.index') ? 'active' : '' }}">
                                 <i class="bi bi-person-check-fill"></i> <span>Verifikasi User</span>
                             </a>
-                            <a href="{{ route('admin.admin.logs') }}"
+                            <a href="{{ route('admin.logs') }}"
                                 class="nav-link {{ Request::routeIs('admin.admin.logs') ? 'active' : '' }}">
                                 <i class="bi bi-card-text"></i> <span>Log Aktivitas</span>
                             </a>

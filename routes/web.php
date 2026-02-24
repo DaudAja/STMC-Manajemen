@@ -149,7 +149,7 @@ Route::middleware(['auth', 'is_active'])->group(function () {
         // Aksi Force Delete (Hapus Selamanya)
         Route::delete('/users/{id}/force-delete', [UserController::class, 'forceDelete'])->name('users.force_delete');
 
-        // Route Log Aktivitas (Opsional jika sudah ada controllernya)
+        // Rute Log Aktivitas
         Route::get('/logs', [ActivityLogController::class, 'index'])->name('logs');
     });
 });
