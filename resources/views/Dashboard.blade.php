@@ -35,7 +35,7 @@
         </style>
 
         <div class="row mb-4 g-3">
-            {{-- KARTU BARU: Total Keseluruhan --}}
+            {{-- KARTU 1: Total Keseluruhan --}}
             <div class="col-md-4 col-lg-1-5">
                 <div class="card p-3 border-0 shadow-sm h-100" style="border-radius: 16px; background: linear-gradient(135deg, var(--stmc-primary) 0%, var(--stmc-primary-dark) 100%); color: white;">
                     <div class="d-flex align-items-center">
@@ -50,6 +50,7 @@
                 </div>
             </div>
 
+            {{-- KARTU 2: Masuk Hari Ini --}}
             <div class="col-md-4 col-lg-1-5">
                 <div class="card p-3 border-0 shadow-sm h-100" style="border-radius: 16px;">
                     <div class="d-flex align-items-center">
@@ -64,6 +65,7 @@
                 </div>
             </div>
 
+            {{-- KARTU 3: Keluar Hari Ini --}}
             <div class="col-md-4 col-lg-1-5">
                 <div class="card p-3 border-0 shadow-sm h-100" style="border-radius: 16px;">
                     <div class="d-flex align-items-center">
@@ -78,36 +80,44 @@
                 </div>
             </div>
 
+            {{-- KARTU 4: Total Surat Masuk (DIPERBARUI) --}}
             <div class="col-md-6 col-lg-1-5">
                 <div class="card p-3 border-0 shadow-sm h-100" style="border-radius: 16px;">
                     <div class="d-flex align-items-center">
-                        <div class="p-3 bg-warning bg-opacity-10 rounded-circle me-3 d-flex justify-content-center align-items-center" style="width: 55px; height: 55px;">
-                            <i class="bi bi-building-fill text-warning fs-3"></i>
+                        <div class="p-3 bg-info bg-opacity-10 rounded-circle me-3 d-flex justify-content-center align-items-center" style="width: 55px; height: 55px;">
+                            <i class="bi bi-box-arrow-in-down-right text-info fs-3"></i>
                         </div>
                         <div>
-                            <div class="text-muted small fw-bold text-uppercase" style="letter-spacing: 0.5px;">Total Internal</div>
-                            <h3 class="fw-bold mb-0 text-dark">{{ $internalCount }}</h3>
+                            <div class="text-muted small fw-bold text-uppercase" style="letter-spacing: 0.5px; font-size: 0.7rem;">Total Surat Masuk</div>
+                            <h3 class="fw-bold mb-0 text-dark">{{ $totalMasuk }}</h3>
+                            <div style="font-size: 0.7rem; margin-top: 2px;">
+                                <span class="text-muted fw-semibold">Int: <span class="text-info">{{ $masukInternal }}</span></span> &bull;
+                                <span class="text-muted fw-semibold">Ext: <span class="text-info">{{ $masukExternal }}</span></span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
+            {{-- KARTU 5: Total Surat Keluar (DIPERBARUI) --}}
             <div class="col-md-6 col-lg-1-5">
                 <div class="card p-3 border-0 shadow-sm h-100" style="border-radius: 16px;">
                     <div class="d-flex align-items-center">
-                        <div class="p-3 bg-info bg-opacity-10 rounded-circle me-3 d-flex justify-content-center align-items-center" style="width: 55px; height: 55px;">
-                            <i class="bi bi-globe-americas text-info fs-3"></i>
+                        <div class="p-3 bg-warning bg-opacity-10 rounded-circle me-3 d-flex justify-content-center align-items-center" style="width: 55px; height: 55px;">
+                            <i class="bi bi-box-arrow-up-right text-warning fs-3"></i>
                         </div>
                         <div>
-                            <div class="text-muted small fw-bold text-uppercase" style="letter-spacing: 0.5px;">Total Eksternal</div>
-                            <h3 class="fw-bold mb-0 text-dark">{{ $externalCount }}</h3>
+                            <div class="text-muted small fw-bold text-uppercase" style="letter-spacing: 0.5px; font-size: 0.7rem;">Total Surat Keluar</div>
+                            <h3 class="fw-bold mb-0 text-dark">{{ $totalKeluar }}</h3>
+                            <div style="font-size: 0.7rem; margin-top: 2px;">
+                                <span class="text-muted fw-semibold">Int: <span class="text-warning">{{ $keluarInternal }}</span></span> &bull;
+                                <span class="text-muted fw-semibold">Ext: <span class="text-warning">{{ $keluarExternal }}</span></span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        {{-- SISA KODE (GRAFIK, TABEL, DAN SCRIPT) SAMA PERSIS SEPERTI SEBELUMNYA --}}
 
         {{-- 3. Row Charts (GRAFIK STACKED) --}}
         <div class="row mb-4">

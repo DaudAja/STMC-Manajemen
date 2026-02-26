@@ -20,7 +20,7 @@ class CategorySeeder extends Seeder
 
         // 2. Kategori Internal Keluar
         Category::create([
-            'nama_kategori' => 'Surat Keluar Internal (Memo)',
+            'nama_kategori' => 'Surat Keluar Internal',
             'jenis' => 'keluar',
             'sifat' => 'internal',
             'kode_kategori' => 'INT',

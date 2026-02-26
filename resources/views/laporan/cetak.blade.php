@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <title>Laporan Arsip Surat - STMC</title>
@@ -10,25 +11,42 @@
     <style>
         /* CSS Khusus Cetak */
         @media print {
-            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            .no-print { display: none !important; }
-            a { text-decoration: none !important; color: black !important; }
+            body {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+
+            a {
+                text-decoration: none !important;
+                color: black !important;
+            }
         }
 
-        body { font-family: 'Times New Roman', Times, serif; font-size: 12pt; }
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 12pt;
+        }
 
         /* Kop Surat */
-        .kop-surat { border-bottom: 3px double black; margin-bottom: 20px; padding-bottom: 10px; }
+        .kop-surat {
+            border-bottom: 3px double black;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+        }
 
         /* --- PERBAIKAN GARIS HITAM --- */
         /* Memaksa semua garis tabel (luar & dalam) berwarna hitam pekat */
         .table-bordered,
-        .table-bordered > thead > tr > th,
-        .table-bordered > tbody > tr > th,
-        .table-bordered > tfoot > tr > th,
-        .table-bordered > thead > tr > td,
-        .table-bordered > tbody > tr > td,
-        .table-bordered > tfoot > tr > td {
+        .table-bordered>thead>tr>th,
+        .table-bordered>tbody>tr>th,
+        .table-bordered>tfoot>tr>th,
+        .table-bordered>thead>tr>td,
+        .table-bordered>tbody>tr>td,
+        .table-bordered>tfoot>tr>td {
             border: 1px solid #000000 !important;
             border-color: #000000 !important;
         }
@@ -40,18 +58,24 @@
         }
 
         /* Kotak QR Code */
-        .qr-box { border: 1px solid #000; padding: 2px; display: inline-block; }
+        .qr-box {
+            border: 1px solid #000;
+            padding: 2px;
+            display: inline-block;
+        }
     </style>
 </head>
 
 {{-- Otomatis muncul dialog print saat halaman dibuka --}}
+
 <body onload="window.print()">
 
     <div class="container-fluid mt-4">
 
         {{-- Tombol Kembali (Hilang saat diprint) --}}
         <div class="d-flex justify-content-between mb-3 no-print">
-            <button onclick="window.close()" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> Kembali / Tutup</button>
+            <button onclick="window.close()" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> Kembali /
+                Tutup</button>
             <button onclick="window.print()" class="btn btn-primary"><i class="bi bi-printer"></i> Print Ulang</button>
         </div>
 
@@ -88,47 +112,63 @@
             </thead>
             <tbody>
                 @forelse($data as $key => $surat)
-                <tr>
-                    <td class="text-center">{{ $key + 1 }}</td>
+                    <tr>
+                        <td class="text-center">{{ $key + 1 }}</td>
 
-                    {{-- Kolom Nomor Surat --}}
-                    <td class="fw-bold text-break">
-                        @if($surat->foto_bukti)
-                            <a href="{{ asset('storage/surat/' . $surat->foto_bukti) }}" target="_blank">
+                        {{-- Kolom Nomor Surat --}}
+                        <td class="fw-bold text-break">
+                            @if ($surat->foto_bukti)
+                                <a href="{{ asset('storage/surat/' . $surat->foto_bukti) }}" target="_blank">
+                                    {{ $surat->nomor_surat }}
+                                </a>
+                            @else
                                 {{ $surat->nomor_surat }}
-                            </a>
-                        @else
-                            {{ $surat->nomor_surat }}
-                        @endif
-                    </td>
+                            @endif
+                        </td>
 
-                    <td class="text-center">{{ \Carbon\Carbon::parse($surat->tanggal_surat)->translatedFormat('d/m/Y') }}</td>
+                        <td class="text-center">
+                            {{ \Carbon\Carbon::parse($surat->tanggal_surat)->translatedFormat('d/m/Y') }}</td>
 
-                    <td class="text-center text-uppercase small">
-                        {{ ucfirst($surat->category->jenis) }}
-                    </td>
+                        <td class="text-center text-uppercase small">
+                            {{ ucfirst($surat->category->jenis) }}
+                        </td>
 
-                    <td>{{ $surat->nama_surat }}</td>
+                        <td>{{ $surat->nama_surat }}</td>
 
-                    {{-- Perbaikan: Mengambil nama kategori dari relasi --}}
-                    <td>{{ $surat->category->nama_kategori }}</td>
+                        {{-- Perbaikan: Mengambil nama kategori dari relasi --}}
+                        <td>{{ $surat->category->nama_kategori }}</td>
 
-                    {{-- Kolom QR Code --}}
-                    <td class="text-center">
-                        @if($surat->foto_bukti)
+                        {{-- Kolom QR Code --}}
+                        {{-- Kolom QR Code --}}
+                        <td class="text-center">
+                            @if ($surat->foto_bukti)
+                                {{-- Kita bungkus dengan link <a> agar di web pun bisa diklik --}}
+                                <a href="{{ url('storage/surat/' . $surat->foto_bukti) }}" target="_blank">
+                                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ url('storage/surat/' . $surat->foto_bukti) }}"
+                                        class="qr-box" width="50" height="50"
+                                        style="border: 1px solid #ddd; padding: 2px; border-radius: 4px;"
+                                        alt="Scan Surat">
+                                </a>
+                                <div style="font-size: 10px;" class="text-muted mt-1">Scan PDF</div>
+                            @else
+                                <span class="small text-muted">-</span>
+                            @endif
+                        </td>
+                        {{-- <td class="text-center">
+                        @if ($surat->foto_bukti)
                             <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ asset('storage/surat/' . $surat->foto_bukti) }}"
                                  class="qr-box" width="50" height="50" alt="QR">
                         @else
                             <span class="small text-muted">-</span>
                         @endif
-                    </td>
-                </tr>
+                    </td> --}}
+                    </tr>
                 @empty
-                <tr>
-                    <td colspan="7" class="text-center p-4 fst-italic text-muted">
-                        Tidak ada data surat pada periode ini.
-                    </td>
-                </tr>
+                    <tr>
+                        <td colspan="7" class="text-center p-4 fst-italic text-muted">
+                            Tidak ada data surat pada periode ini.
+                        </td>
+                    </tr>
                 @endforelse
             </tbody>
         </table>
@@ -146,4 +186,5 @@
 
     </div>
 </body>
+
 </html>

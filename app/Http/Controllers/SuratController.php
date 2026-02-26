@@ -71,23 +71,36 @@ class SuratController extends Controller
     public function store(Request $request)
     {
         // dd($request->all());
-
-        $request->validate([
-            'category_id'   => 'required|exists:categories,id', // Validasi kategori
+        // 1. Validasi dasar yang berlaku untuk semua surat
+        $rules = [
+            'category_id'   => 'required|exists:categories,id',
             'nama_surat'    => 'required|string|max:255',
             'tanggal_surat' => 'required|date',
             'foto_bukti'    => 'required|file|mimes:pdf|max:5120',
-            'nomor_surat'   => 'required|unique:surats,nomor_surat',
-        ]);
+        ];
 
-        // Proses upload file
+        // 2. Cek apakah ini Surat Masuk atau Surat Keluar
+        $kategori = Category::find($request->category_id);
+
+        if ($kategori && $kategori->jenis == 'keluar') {
+            // Jika Surat Keluar: Nomor dilarang kembar agar tetap berurut
+            $rules['nomor_surat'] = 'required|unique:surats,nomor_surat';
+        } else {
+            // Jika Surat Masuk: Nomor bebas karena dari instansi luar
+            $rules['nomor_surat'] = 'required|string|max:255';
+        }
+
+        // 3. Eksekusi Validasi
+        $request->validate($rules);
+
+        // 4. Proses upload file
         $nama_file = null;
         if ($request->hasFile('foto_bukti')) {
             $path = $request->file('foto_bukti')->store('surat', 'public');
             $nama_file = basename($path);
         }
 
-        // Simpan Data
+        // 5. Simpan Data
         $surat = Surat::create([
             'user_id'       => Auth::id(),
             'category_id'   => $request->category_id,
@@ -97,7 +110,7 @@ class SuratController extends Controller
             'foto_bukti'    => $nama_file,
         ]);
 
-        // Catat Log Aktivitas
+        // 6. Catat Log Aktivitas
         ActivityLog::create([
             'user_id'    => Auth::id(),
             'aksi'       => 'Tambah Surat',
