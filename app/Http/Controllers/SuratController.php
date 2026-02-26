@@ -260,10 +260,10 @@ class SuratController extends Controller
         $query->whereBetween('tanggal_surat', [$awal, $akhir]);
 
         // B. Filter Jenis (INI YANG DIPERBAIKI)
-        // Kita cari 'jenis' di dalam tabel 'category', bukan di tabel 'surat'
         if ($jenis !== 'semua') {
             $query->whereHas('category', function ($q) use ($jenis) {
-                $q->where('jenis', $jenis);
+                // Menggunakan LIKE agar semua yang mengandung kata 'keluar' / 'masuk' ikut terbawa
+                $q->where('jenis', 'LIKE', '%' . $jenis . '%');
             });
         }
 

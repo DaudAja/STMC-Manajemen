@@ -373,16 +373,16 @@
             <a href="/dashboard" class="nav-link {{ Request::is('dashboard') ? 'active' : '' }}">
                 <i class="bi bi-grid-1x2-fill"></i> <span>Dashboard</span>
             </a>
-            <a href="/profile" class="nav-link {{ Request::is('profile') ? 'active' : '' }}">
-                <i class="bi bi-person-badge-fill"></i> <span>Profil Saya</span>
-            </a>
-
-            <div class="sidebar-divider">Manajemen Arsip</div>
             <a href="/surat/input" class="nav-link {{ Request::is('surat/input') ? 'active' : '' }}">
                 <i class="bi bi-cloud-arrow-up-fill text-success"
                     style="{{ Request::is('surat/input') ? 'color: white !important;' : '' }}"></i> <span>Input
                     Surat</span>
             </a>
+            <a href="/profile" class="nav-link {{ Request::is('profile') ? 'active' : '' }}">
+                <i class="bi bi-person-badge-fill"></i> <span>Profil Saya</span>
+            </a>
+
+            <div class="sidebar-divider">Manajemen Arsip</div>
             <a href="/surat/masuk" class="nav-link {{ Request::is('surat/masuk*') ? 'active' : '' }}">
                 <i class="bi bi-box-arrow-in-down-right"></i> <span>Surat Masuk</span>
             </a>
